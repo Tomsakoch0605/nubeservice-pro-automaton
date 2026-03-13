@@ -139,7 +139,7 @@ const Booking = () => {
     const dayEnd = new Date(selectedDate);
     dayEnd.setHours(23, 59, 59, 999);
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("appointments")
       .select("starts_at, ends_at")
       .eq("profile_id", profile.id)
@@ -147,6 +147,7 @@ const Booking = () => {
       .gte("starts_at", dayStart.toISOString())
       .lte("starts_at", dayEnd.toISOString());
 
+    console.log("Availability check:", { profileId: profile.id, dayStart: dayStart.toISOString(), dayEnd: dayEnd.toISOString(), data, error });
     setExistingAppts((data || []).map(a => ({ starts_at: a.starts_at, ends_at: a.ends_at })));
     setLoadingSlots(false);
   }, [profile]);
