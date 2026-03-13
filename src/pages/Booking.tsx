@@ -147,7 +147,7 @@ const Booking = () => {
       .gte("starts_at", dayStart.toISOString())
       .lte("starts_at", dayEnd.toISOString());
 
-    console.log("Availability check:", { profileId: profile.id, dayStart: dayStart.toISOString(), dayEnd: dayEnd.toISOString(), data, error });
+    setExistingAppts((data || []).map(a => ({ starts_at: a.starts_at, ends_at: a.ends_at })));
     setExistingAppts((data || []).map(a => ({ starts_at: a.starts_at, ends_at: a.ends_at })));
     setLoadingSlots(false);
   }, [profile]);
