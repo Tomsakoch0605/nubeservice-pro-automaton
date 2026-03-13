@@ -179,8 +179,8 @@ const Payments = () => {
   };
 
   const handleSave = async () => {
-    if (!selectedAppt) { toast.error("Seleccioná una cita"); return; }
-    if (!amount || Number(amount) <= 0) { toast.error("Ingresá un monto válido"); return; }
+    if (!selectedAppt) { toast.error("Selecciona una cita"); return; }
+    if (!amount || Number(amount) <= 0) { toast.error("Ingresa un monto válido"); return; }
     if (!profileId) return;
     setSaving(true);
 
