@@ -24,7 +24,7 @@ const Auth = () => {
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success("¡Bienvenido de vuelta!");
+        toast.success("¡Bienvenido de nuevo!");
         navigate("/dashboard");
       } else {
         const { data, error } = await supabase.auth.signUp({
@@ -34,12 +34,11 @@ const Auth = () => {
         });
         if (error) throw error;
         
-        // If auto-confirm is enabled, we get a session immediately
         if (data.session) {
           toast.success("¡Cuenta creada! Bienvenido/a.");
           navigate("/dashboard");
         } else {
-          toast.success("¡Cuenta creada! Revisá tu email para confirmar.");
+          toast.success("¡Cuenta creada! Revisa tu email para confirmar.");
         }
       }
     } catch (error: any) {
@@ -67,7 +66,7 @@ const Auth = () => {
             {isLogin ? "Iniciar Sesión" : "Crear Cuenta"}
           </h2>
           <p className="text-sm text-muted-foreground mb-6">
-            {isLogin ? "Accedé a tu panel de gestión" : "Empezá a automatizar tu agenda"}
+            {isLogin ? "Accede a tu panel de gestión" : "Empieza a automatizar tu agenda"}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -78,7 +77,7 @@ const Auth = () => {
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     className="pl-10"
-                    placeholder="Laura García"
+                    placeholder="María García"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -93,7 +92,7 @@ const Auth = () => {
                 <Input
                   className="pl-10"
                   type="email"
-                  placeholder="laura@email.com"
+                  placeholder="maria@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -126,7 +125,7 @@ const Auth = () => {
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              {isLogin ? "¿No tenés cuenta? Registrate" : "¿Ya tenés cuenta? Iniciá sesión"}
+              {isLogin ? "¿No tienes cuenta? Regístrate" : "¿Ya tienes cuenta? Inicia sesión"}
             </button>
           </div>
         </div>

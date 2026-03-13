@@ -10,7 +10,7 @@ const features = [
   {
     icon: Bot,
     title: "Asistente IA",
-    desc: "Un bot que responde, sugiere horarios, cobra señas y confirma turnos automáticamente.",
+    desc: "Un bot que responde, sugiere horarios, cobra anticipos y confirma turnos automáticamente.",
   },
   {
     icon: MessageSquare,
@@ -20,7 +20,7 @@ const features = [
   {
     icon: CreditCard,
     title: "Pagos Integrados",
-    desc: "Cobra señas o el servicio completo con Mercado Pago, transferencia o tarjeta.",
+    desc: "Cobra anticipos o el servicio completo con Mercado Pago, transferencia o tarjeta.",
   },
   {
     icon: Users,
@@ -40,7 +40,7 @@ const FeaturesSection = () => (
       <div className="text-center mb-16">
         <span className="text-primary font-semibold text-sm uppercase tracking-wider">Funcionalidades</span>
         <h2 className="text-3xl sm:text-4xl font-display font-bold mt-3 mb-4 text-foreground">
-          Todo lo que necesitás para crecer
+          Todo lo que necesitas para crecer
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
           Desde la primera consulta hasta la fidelización, cada paso está automatizado.
