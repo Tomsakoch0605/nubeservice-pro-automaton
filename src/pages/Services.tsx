@@ -124,7 +124,7 @@ const Services = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">Servicios</h1>
-            <p className="text-muted-foreground">Gestioná tu catálogo de servicios.</p>
+            <p className="text-muted-foreground">Gestiona tu catálogo de servicios.</p>
           </div>
           <Button onClick={openNew} className="gap-2">
             <Plus className="w-4 h-4" /> Nuevo Servicio
