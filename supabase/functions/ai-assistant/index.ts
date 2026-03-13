@@ -86,7 +86,7 @@ Dueño: ${profile.owner_name}
 Horario: ${profile.start_time} a ${profile.end_time}
 Días laborales: ${(profile.work_days || []).join(", ")}
 Ubicación: ${profile.location || "No especificada"}
-Requiere seña: ${profile.requires_deposit ? `Sí (${profile.deposit_percent}%)` : "No"}
+Requiere anticipo: ${profile.requires_deposit ? `Sí (${profile.deposit_percent}%)` : "No"}
 
 Fecha y hora actual: ${now.toLocaleString("es-MX", { timeZone: "America/Mexico_City" })}
 
