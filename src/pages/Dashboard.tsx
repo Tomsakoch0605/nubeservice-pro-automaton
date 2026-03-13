@@ -1,6 +1,7 @@
 import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/landing/Navbar";
+import AiAssistant from "@/components/dashboard/AiAssistant";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
