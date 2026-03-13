@@ -5,6 +5,7 @@ import AiAssistant from "@/components/dashboard/AiAssistant";
 import NewAppointmentDialog from "@/components/dashboard/NewAppointmentDialog";
 import EditAppointmentDialog, { type AppointmentDetail } from "@/components/dashboard/EditAppointmentDialog";
 import SettingsSection from "@/components/dashboard/SettingsSection";
+import AdvancedStats from "@/components/dashboard/AdvancedStats";
 import NotificationsBell from "@/components/dashboard/NotificationsBell";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
