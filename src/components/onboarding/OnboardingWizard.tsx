@@ -112,6 +112,14 @@ const OnboardingWizard = () => {
 
       const serviceLabel = data.serviceType === "Otro" ? data.customService : data.serviceType;
 
+      // Generate slug from business name
+      const baseSlug = data.businessName
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+      const slug = baseSlug || `negocio-${Date.now()}`;
+
       // Update profile
       const { error: profileError } = await supabase
         .from("profiles")
@@ -128,6 +136,7 @@ const OnboardingWizard = () => {
           requires_deposit: data.requiresDeposit,
           deposit_percent: data.requiresDeposit ? parseInt(data.depositPercent) : null,
           onboarding_completed: true,
+          slug,
         })
         .eq("id", profile.id);
 

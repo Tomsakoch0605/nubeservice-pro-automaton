@@ -161,6 +161,21 @@ const Dashboard = () => {
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">Dashboard</h1>
             <p className="text-muted-foreground">Bienvenido de vuelta. Acá tenés un resumen de tu negocio.</p>
+            {profileSlug && (
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-xs text-muted-foreground">Link de reservas:</span>
+                <code className="text-xs bg-muted px-2 py-0.5 rounded">{window.location.origin}/reservar/{profileSlug}</code>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${window.location.origin}/reservar/${profileSlug}`);
+                    toast.success("Link copiado al portapapeles");
+                  }}
+                  className="text-primary hover:text-primary/80 transition-colors"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-4">
             <Link to="/clients" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
