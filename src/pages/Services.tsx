@@ -135,7 +135,7 @@ const Services = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card p-12 text-center">
             <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-lg font-medium text-foreground mb-2">Sin servicios todavía</p>
-            <p className="text-muted-foreground mb-6">Agregá tu primer servicio para empezar a gestionar tu negocio.</p>
+            <p className="text-muted-foreground mb-6">Agrega tu primer servicio para empezar a gestionar tu negocio.</p>
             <Button onClick={openNew} className="gap-2"><Plus className="w-4 h-4" /> Agregar Servicio</Button>
           </motion.div>
         ) : (
