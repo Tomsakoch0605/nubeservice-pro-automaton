@@ -1,4 +1,4 @@
-import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus, Pencil, CalendarDays } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus, Pencil, CalendarDays, Package } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
@@ -166,6 +166,9 @@ const Dashboard = () => {
             </Link>
             <Link to="/calendar" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
               <CalendarDays className="w-4 h-4" /> Calendario
+            </Link>
+            <Link to="/services" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+              <Package className="w-4 h-4" /> Servicios
             </Link>
             {profileId && <NotificationsBell profileId={profileId} />}
             <Button onClick={() => setNewApptOpen(true)} className="gap-2">
