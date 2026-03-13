@@ -247,7 +247,7 @@ const Payments = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">Pagos</h1>
-            <p className="text-muted-foreground">Registrá cobros y consultá tu historial de ingresos.</p>
+            <p className="text-muted-foreground">Registra cobros y consulta tu historial de ingresos.</p>
           </div>
           <Button onClick={openNew} className="gap-2">
             <Plus className="w-4 h-4" /> Registrar Pago
