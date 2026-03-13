@@ -123,7 +123,7 @@ const Dashboard = () => {
 
       const { data: profile } = await supabase
         .from("profiles")
-        .select("id, onboarding_completed")
+        .select("id, onboarding_completed, slug")
         .eq("user_id", session.user.id)
         .maybeSingle();
 
@@ -131,6 +131,7 @@ const Dashboard = () => {
       if (!profile.onboarding_completed) { navigate("/onboarding"); return; }
 
       setProfileId(profile.id);
+      setProfileSlug(profile.slug);
       await loadData(profile.id);
       setLoading(false);
     };
