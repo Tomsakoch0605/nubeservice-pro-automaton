@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, XCircle, CheckCircle, AlertTriangle } from "lucide-react";
+import { Loader2, XCircle, CheckCircle, AlertTriangle, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
