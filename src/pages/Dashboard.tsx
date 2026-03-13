@@ -167,6 +167,9 @@ const Dashboard = () => {
             <Link to="/calendar" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
               <CalendarDays className="w-4 h-4" /> Calendario
             </Link>
+            <Link to="/services" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+              <Package className="w-4 h-4" /> Servicios
+            </Link>
             {profileId && <NotificationsBell profileId={profileId} />}
             <Button onClick={() => setNewApptOpen(true)} className="gap-2">
               <Plus className="w-4 h-4" /> Nueva Cita
