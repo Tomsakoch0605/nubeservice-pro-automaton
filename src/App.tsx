@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import Clients from "./pages/Clients.tsx";
 import CalendarView from "./pages/CalendarView.tsx";
 import Services from "./pages/Services.tsx";
+import Booking from "./pages/Booking.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/clients" element={<Clients />} />
           <Route path="/calendar" element={<CalendarView />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/reservar/:slug" element={<Booking />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

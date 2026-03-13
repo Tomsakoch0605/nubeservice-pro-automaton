@@ -1,4 +1,4 @@
-import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus, Pencil, CalendarDays, Package } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus, Pencil, CalendarDays, Package, Share2, Copy } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
@@ -8,6 +8,7 @@ import NotificationsBell from "@/components/dashboard/NotificationsBell";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 type KpiData = {
@@ -48,6 +49,7 @@ const formatCurrency = (n: number) =>
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [profileId, setProfileId] = useState<string | null>(null);
+  const [profileSlug, setProfileSlug] = useState<string | null>(null);
   const [kpis, setKpis] = useState<KpiData>({ appointmentsThisMonth: 0, revenueThisMonth: 0, activeClients: 0, attendanceRate: 0 });
   const [todayAppts, setTodayAppts] = useState<TodayAppointment[]>([]);
   const [extra, setExtra] = useState<ExtraKpi>({ noShowRate: 0, popularService: "-", popularServiceCount: 0, avgRevenuePerClient: 0, recurringRate: 0 });
@@ -122,7 +124,7 @@ const Dashboard = () => {
 
       const { data: profile } = await supabase
         .from("profiles")
-        .select("id, onboarding_completed")
+        .select("id, onboarding_completed, slug")
         .eq("user_id", session.user.id)
         .maybeSingle();
 
@@ -130,6 +132,7 @@ const Dashboard = () => {
       if (!profile.onboarding_completed) { navigate("/onboarding"); return; }
 
       setProfileId(profile.id);
+      setProfileSlug(profile.slug);
       await loadData(profile.id);
       setLoading(false);
     };
@@ -159,6 +162,21 @@ const Dashboard = () => {
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">Dashboard</h1>
             <p className="text-muted-foreground">Bienvenido de vuelta. Acá tenés un resumen de tu negocio.</p>
+            {profileSlug && (
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-xs text-muted-foreground">Link de reservas:</span>
+                <code className="text-xs bg-muted px-2 py-0.5 rounded">{window.location.origin}/reservar/{profileSlug}</code>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${window.location.origin}/reservar/${profileSlug}`);
+                    toast.success("Link copiado al portapapeles");
+                  }}
+                  className="text-primary hover:text-primary/80 transition-colors"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-4">
             <Link to="/clients" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
