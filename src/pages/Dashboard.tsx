@@ -51,8 +51,66 @@ const Dashboard = () => {
   const [newApptOpen, setNewApptOpen] = useState(false);
   const navigate = useNavigate();
 
+  const loadData = useCallback(async (pid: string) => {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59).toISOString();
+
+    const [apptRes, paymentsRes, clientsRes, todayRes] = await Promise.all([
+      supabase.from("appointments").select("id, status, service_id").eq("profile_id", pid).gte("starts_at", startOfMonth).lte("starts_at", endOfMonth),
+      supabase.from("payments").select("amount, status").eq("profile_id", pid).gte("created_at", startOfMonth).lte("created_at", endOfMonth),
+      supabase.from("clients").select("id, total_visits, total_spent").eq("profile_id", pid),
+      supabase.from("appointments").select("id, status, starts_at, clients(full_name), services(name)").eq("profile_id", pid).gte("starts_at", todayStart).lte("starts_at", todayEnd).order("starts_at"),
+    ]);
+
+    const appts = apptRes.data || [];
+    const completedPayments = (paymentsRes.data || []).filter(p => p.status === "completed");
+    const clients = clientsRes.data || [];
+    const todayData = todayRes.data || [];
+
+    const completed = appts.filter(a => a.status === "completed").length;
+    const noShow = appts.filter(a => a.status === "no_show").length;
+    const finishedAppts = completed + noShow;
+    const attendanceRate = finishedAppts > 0 ? Math.round((completed / finishedAppts) * 100) : 100;
+    const noShowRate = finishedAppts > 0 ? Math.round((noShow / finishedAppts) * 100) : 0;
+
+    const revenue = completedPayments.reduce((sum, p) => sum + Number(p.amount), 0);
+    const activeClients = clients.filter(c => (c.total_visits ?? 0) > 0).length;
+
+    setKpis({ appointmentsThisMonth: appts.length, revenueThisMonth: revenue, activeClients, attendanceRate });
+
+    setTodayAppts(todayData.map((a: any) => ({
+      id: a.id,
+      clientName: a.clients?.full_name || "Sin cliente",
+      serviceName: a.services?.name || "Sin servicio",
+      time: new Date(a.starts_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }),
+      status: a.status,
+    })));
+
+    const serviceCounts: Record<string, number> = {};
+    appts.forEach(a => { serviceCounts[a.service_id] = (serviceCounts[a.service_id] || 0) + 1; });
+    const topServiceId = Object.entries(serviceCounts).sort((a, b) => b[1] - a[1])[0];
+
+    let popularName = "-";
+    let popularCount = 0;
+    if (topServiceId) {
+      const { data: svc } = await supabase.from("services").select("name").eq("id", topServiceId[0]).maybeSingle();
+      popularName = svc?.name || "-";
+      popularCount = topServiceId[1];
+    }
+
+    const totalSpent = clients.reduce((s, c) => s + Number(c.total_spent ?? 0), 0);
+    const avgRevenue = activeClients > 0 ? totalSpent / activeClients : 0;
+    const recurring = clients.filter(c => (c.total_visits ?? 0) > 1).length;
+    const recurringRate = clients.length > 0 ? Math.round((recurring / clients.length) * 100) : 0;
+
+    setExtra({ noShowRate, popularService: popularName, popularServiceCount: popularCount, avgRevenuePerClient: avgRevenue, recurringRate });
+  }, []);
+
   useEffect(() => {
-    const load = async () => {
+    const init = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { navigate("/auth"); return; }
 
@@ -66,70 +124,11 @@ const Dashboard = () => {
       if (!profile.onboarding_completed) { navigate("/onboarding"); return; }
 
       setProfileId(profile.id);
-
-      const now = new Date();
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-      const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59).toISOString();
-
-      // Parallel queries
-      const [apptRes, paymentsRes, clientsRes, todayRes] = await Promise.all([
-        supabase.from("appointments").select("id, status, service_id").eq("profile_id", profile.id).gte("starts_at", startOfMonth).lte("starts_at", endOfMonth),
-        supabase.from("payments").select("amount, status").eq("profile_id", profile.id).gte("created_at", startOfMonth).lte("created_at", endOfMonth),
-        supabase.from("clients").select("id, total_visits, total_spent").eq("profile_id", profile.id),
-        supabase.from("appointments").select("id, status, starts_at, clients(full_name), services(name)").eq("profile_id", profile.id).gte("starts_at", todayStart).lte("starts_at", todayEnd).order("starts_at"),
-      ]);
-
-      const appts = apptRes.data || [];
-      const completedPayments = (paymentsRes.data || []).filter(p => p.status === "completed");
-      const clients = clientsRes.data || [];
-      const todayData = todayRes.data || [];
-
-      const completed = appts.filter(a => a.status === "completed").length;
-      const noShow = appts.filter(a => a.status === "no_show").length;
-      const finishedAppts = completed + noShow;
-      const attendanceRate = finishedAppts > 0 ? Math.round((completed / finishedAppts) * 100) : 100;
-      const noShowRate = finishedAppts > 0 ? Math.round((noShow / finishedAppts) * 100) : 0;
-
-      const revenue = completedPayments.reduce((sum, p) => sum + Number(p.amount), 0);
-      const activeClients = clients.filter(c => (c.total_visits ?? 0) > 0).length;
-
-      setKpis({ appointmentsThisMonth: appts.length, revenueThisMonth: revenue, activeClients, attendanceRate });
-
-      // Today's appointments
-      setTodayAppts(todayData.map((a: any) => ({
-        id: a.id,
-        clientName: a.clients?.full_name || "Sin cliente",
-        serviceName: a.services?.name || "Sin servicio",
-        time: new Date(a.starts_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }),
-        status: a.status,
-      })));
-
-      // Extra KPIs
-      const serviceCounts: Record<string, number> = {};
-      appts.forEach(a => { serviceCounts[a.service_id] = (serviceCounts[a.service_id] || 0) + 1; });
-      const topServiceId = Object.entries(serviceCounts).sort((a, b) => b[1] - a[1])[0];
-
-      let popularName = "-";
-      let popularCount = 0;
-      if (topServiceId) {
-        const { data: svc } = await supabase.from("services").select("name").eq("id", topServiceId[0]).maybeSingle();
-        popularName = svc?.name || "-";
-        popularCount = topServiceId[1];
-      }
-
-      const totalSpent = clients.reduce((s, c) => s + Number(c.total_spent ?? 0), 0);
-      const avgRevenue = activeClients > 0 ? totalSpent / activeClients : 0;
-      const recurring = clients.filter(c => (c.total_visits ?? 0) > 1).length;
-      const recurringRate = clients.length > 0 ? Math.round((recurring / clients.length) * 100) : 0;
-
-      setExtra({ noShowRate, popularService: popularName, popularServiceCount: popularCount, avgRevenuePerClient: avgRevenue, recurringRate });
+      await loadData(profile.id);
       setLoading(false);
     };
-
-    load();
-  }, [navigate]);
+    init();
+  }, [navigate, loadData]);
 
   if (loading) {
     return (
