@@ -88,10 +88,10 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
   }, [open, profileId]);
 
   const handleSave = async () => {
-    if (!clientId) { toast.error("Seleccioná un cliente"); return; }
-    if (!serviceId) { toast.error("Seleccioná un servicio"); return; }
-    if (!date) { toast.error("Seleccioná una fecha"); return; }
-    if (!time) { toast.error("Seleccioná un horario"); return; }
+    if (!clientId) { toast.error("Selecciona un cliente"); return; }
+    if (!serviceId) { toast.error("Selecciona un servicio"); return; }
+    if (!date) { toast.error("Selecciona una fecha"); return; }
+    if (!time) { toast.error("Selecciona un horario"); return; }
 
     const service = services.find(s => s.id === serviceId);
     if (!service) return;
