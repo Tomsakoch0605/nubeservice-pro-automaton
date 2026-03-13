@@ -212,6 +212,7 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+      <AiAssistant />
     </div>
   );
 };
