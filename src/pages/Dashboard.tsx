@@ -22,6 +22,7 @@ type TodayAppointment = {
   serviceName: string;
   time: string;
   status: string;
+  notes: string | null;
 };
 
 type ExtraKpi = {
