@@ -267,6 +267,8 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {profileId && <AdvancedStats profileId={profileId} />}
+
         {profileId && (
           <div className="mt-6">
             <SettingsSection profileId={profileId} />
