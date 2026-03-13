@@ -178,22 +178,23 @@ const Booking = () => {
 
     return allTimeSlots.filter(slot => {
       const [h, m] = slot.split(":").map(Number);
+      // Create slot times in the same way they'll be stored (local time -> ISO)
       const slotStart = new Date(date);
       slotStart.setHours(h, m, 0, 0);
-      const slotEnd = new Date(slotStart.getTime() + duration * 60 * 1000);
+      const slotStartMs = slotStart.getTime();
+      const slotEndMs = slotStartMs + duration * 60 * 1000;
 
       // Check the slot doesn't exceed business hours
       const [eh, em] = (profile?.end_time || "18:00").split(":").map(Number);
       const businessEnd = new Date(date);
       businessEnd.setHours(eh, em, 0, 0);
-      if (slotEnd > businessEnd) return false;
+      if (slotEndMs > businessEnd.getTime()) return false;
 
-      // Check overlap with existing appointments
+      // Check overlap with existing appointments (compare as timestamps)
       return !existingAppts.some(appt => {
-        const apptStart = new Date(appt.starts_at).getTime();
-        const apptEnd = new Date(appt.ends_at).getTime();
-        // Overlap: slotStart < apptEnd AND slotEnd > apptStart
-        return slotStart.getTime() < apptEnd && slotEnd.getTime() > apptStart;
+        const apptStartMs = new Date(appt.starts_at).getTime();
+        const apptEndMs = new Date(appt.ends_at).getTime();
+        return slotStartMs < apptEndMs && slotEndMs > apptStartMs;
       });
     });
   }, [allTimeSlots, existingAppts, selectedService, date, profile?.end_time]);
