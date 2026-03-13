@@ -17,6 +17,7 @@ type CalendarAppt = {
   status: string;
   notes: string | null;
   clientName: string;
+  clientPhone: string | null;
   serviceName: string;
 };
 
