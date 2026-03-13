@@ -66,7 +66,7 @@ const Dashboard = () => {
       supabase.from("appointments").select("id, status, service_id").eq("profile_id", pid).gte("starts_at", startOfMonth).lte("starts_at", endOfMonth),
       supabase.from("payments").select("amount, status").eq("profile_id", pid).gte("created_at", startOfMonth).lte("created_at", endOfMonth),
       supabase.from("clients").select("id, total_visits, total_spent").eq("profile_id", pid),
-      supabase.from("appointments").select("id, status, starts_at, clients(full_name), services(name)").eq("profile_id", pid).gte("starts_at", todayStart).lte("starts_at", todayEnd).order("starts_at"),
+      supabase.from("appointments").select("id, status, starts_at, notes, clients(full_name), services(name)").eq("profile_id", pid).gte("starts_at", todayStart).lte("starts_at", todayEnd).order("starts_at"),
     ]);
 
     const appts = apptRes.data || [];
