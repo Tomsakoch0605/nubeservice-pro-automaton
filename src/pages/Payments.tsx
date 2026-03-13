@@ -340,7 +340,7 @@ const Payments = () => {
                         className="border-b transition-colors hover:bg-muted/50"
                       >
                         <TableCell className="text-sm">
-                          {new Date(p.created_at).toLocaleDateString("es-AR", {
+                          {new Date(p.created_at).toLocaleDateString("es-MX", {
                             day: "2-digit",
                             month: "short",
                             year: "numeric",
