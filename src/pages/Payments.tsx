@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { DollarSign, Plus, Search, Loader2, Filter, TrendingUp, CreditCard, Calendar } from "lucide-react";
+import { DollarSign, Plus, Search, Loader2, Filter, TrendingUp, CreditCard, Calendar, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
