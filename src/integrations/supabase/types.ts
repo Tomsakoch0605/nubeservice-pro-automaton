@@ -254,6 +254,7 @@ export type Database = {
           phone: string | null
           requires_deposit: boolean | null
           service_type: string | null
+          slug: string | null
           start_time: string | null
           updated_at: string
           user_id: string
@@ -272,6 +273,7 @@ export type Database = {
           phone?: string | null
           requires_deposit?: boolean | null
           service_type?: string | null
+          slug?: string | null
           start_time?: string | null
           updated_at?: string
           user_id: string
@@ -290,6 +292,7 @@ export type Database = {
           phone?: string | null
           requires_deposit?: boolean | null
           service_type?: string | null
+          slug?: string | null
           start_time?: string | null
           updated_at?: string
           user_id?: string
