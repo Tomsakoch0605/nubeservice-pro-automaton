@@ -87,6 +87,20 @@ const SettingsSection = ({ profileId }: Props) => {
 
     setSaving(true);
     try {
+      const { data: existing } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("slug", cleanSlug)
+        .neq("id", profileId)
+        .maybeSingle();
+      if (existing) {
+        toast.error("Ese slug ya está en uso, elige otro");
+        setSaving(false);
+        return;
+      }
+    } catch {}
+
+    try {
       const { error } = await supabase
         .from("profiles")
         .update({

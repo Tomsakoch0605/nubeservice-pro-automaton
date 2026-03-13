@@ -116,7 +116,17 @@ const OnboardingWizard = () => {
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
-      const slug = baseSlug || `negocio-${Date.now()}`;
+      let slug = baseSlug || `negocio-${Date.now()}`;
+
+      const { data: existing } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("slug", slug)
+        .neq("id", profile.id)
+        .maybeSingle();
+      if (existing) {
+        slug = `${slug}-${Date.now().toString(36)}`;
+      }
 
       const { error: profileError } = await supabase
         .from("profiles")
