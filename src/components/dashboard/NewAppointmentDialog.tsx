@@ -88,10 +88,10 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
   }, [open, profileId]);
 
   const handleSave = async () => {
-    if (!clientId) { toast.error("Seleccioná un cliente"); return; }
-    if (!serviceId) { toast.error("Seleccioná un servicio"); return; }
-    if (!date) { toast.error("Seleccioná una fecha"); return; }
-    if (!time) { toast.error("Seleccioná un horario"); return; }
+    if (!clientId) { toast.error("Selecciona un cliente"); return; }
+    if (!serviceId) { toast.error("Selecciona un servicio"); return; }
+    if (!date) { toast.error("Selecciona una fecha"); return; }
+    if (!time) { toast.error("Selecciona un horario"); return; }
 
     const service = services.find(s => s.id === serviceId);
     if (!service) return;
@@ -146,7 +146,7 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
               <Label>Cliente *</Label>
               <Select value={clientId} onValueChange={setClientId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccioná un cliente" />
+                  <SelectValue placeholder="Selecciona un cliente" />
                 </SelectTrigger>
                 <SelectContent>
                   {clients.length === 0 ? (
@@ -165,7 +165,7 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
               <Label>Servicio *</Label>
               <Select value={serviceId} onValueChange={setServiceId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccioná un servicio" />
+                  <SelectValue placeholder="Selecciona un servicio" />
                 </SelectTrigger>
                 <SelectContent>
                   {services.length === 0 ? (
@@ -199,7 +199,7 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP", { locale: es }) : "Seleccioná una fecha"}
+                    {date ? format(date, "PPP", { locale: es }) : "Selecciona una fecha"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -220,7 +220,7 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
               <Label>Hora *</Label>
               <Select value={time} onValueChange={setTime}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccioná un horario" />
+                  <SelectValue placeholder="Selecciona un horario" />
                 </SelectTrigger>
                 <SelectContent>
                   {timeSlots.map(t => (

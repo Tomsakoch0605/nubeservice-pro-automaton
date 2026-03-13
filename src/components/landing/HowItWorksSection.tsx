@@ -5,20 +5,20 @@ const steps = [
   {
     num: "01",
     icon: Settings,
-    title: "Configurá tu perfil",
+    title: "Configura tu perfil",
     desc: "Tipo de servicio, duración, precios, métodos de pago y horarios disponibles.",
   },
   {
     num: "02",
     icon: Zap,
-    title: "Activá el asistente IA",
+    title: "Activa el asistente IA",
     desc: "Tu bot empieza a atender clientes, gestionar la agenda y cobrar automáticamente.",
   },
   {
     num: "03",
     icon: TrendingUp,
-    title: "Crecé sin límites",
-    desc: "Monitoreá KPIs, fidelizá clientes y escalá tu negocio sin sumar empleados.",
+    title: "Crece sin límites",
+    desc: "Monitorea KPIs, fideliza clientes y escala tu negocio sin sumar empleados.",
   },
 ];
 

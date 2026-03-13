@@ -66,7 +66,7 @@ const statusConfig: Record<string, { label: string; variant: "default" | "second
 
 const typeLabels: Record<string, string> = {
   full: "Pago total",
-  deposit: "Seña",
+  deposit: "Anticipo",
   remaining: "Saldo",
 };
 
@@ -179,8 +179,8 @@ const Payments = () => {
   };
 
   const handleSave = async () => {
-    if (!selectedAppt) { toast.error("Seleccioná una cita"); return; }
-    if (!amount || Number(amount) <= 0) { toast.error("Ingresá un monto válido"); return; }
+    if (!selectedAppt) { toast.error("Selecciona una cita"); return; }
+    if (!amount || Number(amount) <= 0) { toast.error("Ingresa un monto válido"); return; }
     if (!profileId) return;
     setSaving(true);
 
@@ -247,7 +247,7 @@ const Payments = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">Pagos</h1>
-            <p className="text-muted-foreground">Registrá cobros y consultá tu historial de ingresos.</p>
+            <p className="text-muted-foreground">Registra cobros y consulta tu historial de ingresos.</p>
           </div>
           <Button onClick={openNew} className="gap-2">
             <Plus className="w-4 h-4" /> Registrar Pago
@@ -383,7 +383,7 @@ const Payments = () => {
               <Label>Cita *</Label>
               <Select value={selectedAppt} onValueChange={handleSelectAppt}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccioná una cita" />
+                  <SelectValue placeholder="Selecciona una cita" />
                 </SelectTrigger>
                 <SelectContent>
                   {appointments.map((a) => (
@@ -414,7 +414,7 @@ const Payments = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="full">Pago total</SelectItem>
-                  <SelectItem value="deposit">Seña</SelectItem>
+                  <SelectItem value="deposit">Anticipo</SelectItem>
                   <SelectItem value="remaining">Saldo restante</SelectItem>
                 </SelectContent>
               </Select>

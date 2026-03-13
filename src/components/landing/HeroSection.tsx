@@ -7,7 +7,7 @@ import heroImg from "@/assets/hero-illustration.png";
 const checks = [
   "Agenda automática 24/7",
   "Confirmación y recordatorios por WhatsApp",
-  "Cobro de señas integrado",
+  "Cobro de anticipos integrado",
 ];
 
 const HeroSection = () => (

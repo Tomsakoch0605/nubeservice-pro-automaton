@@ -61,9 +61,9 @@ const StepIndicator = ({ current, total }: { current: number; total: number }) =
 );
 
 const stepTitles = [
-  { icon: Calendar, title: "Tu Negocio", sub: "Contanos sobre tu actividad" },
-  { icon: Clock, title: "Agenda y Horarios", sub: "Configurá tu disponibilidad" },
-  { icon: CreditCard, title: "Pagos", sub: "Elegí cómo cobrar" },
+  { icon: Calendar, title: "Tu Negocio", sub: "Cuéntanos sobre tu actividad" },
+  { icon: Clock, title: "Agenda y Horarios", sub: "Configura tu disponibilidad" },
+  { icon: CreditCard, title: "Pagos", sub: "Elige cómo cobrar" },
 ];
 
 const OnboardingWizard = () => {
@@ -76,7 +76,7 @@ const OnboardingWizard = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        toast.error("Necesitás iniciar sesión primero");
+        toast.error("Necesitas iniciar sesión primero");
         navigate("/auth");
       }
     };
@@ -101,7 +101,6 @@ const OnboardingWizard = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error("No hay sesión activa");
 
-      // Get user's profile
       const { data: profile, error: profileFetchError } = await supabase
         .from("profiles")
         .select("id")
@@ -112,7 +111,6 @@ const OnboardingWizard = () => {
 
       const serviceLabel = data.serviceType === "Otro" ? data.customService : data.serviceType;
 
-      // Generate slug from business name
       const baseSlug = data.businessName
         .toLowerCase()
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -120,7 +118,6 @@ const OnboardingWizard = () => {
         .replace(/^-|-$/g, "");
       const slug = baseSlug || `negocio-${Date.now()}`;
 
-      // Update profile
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -142,7 +139,6 @@ const OnboardingWizard = () => {
 
       if (profileError) throw profileError;
 
-      // Create first service
       if (serviceLabel && data.servicePrice) {
         const { error: serviceError } = await supabase
           .from("services")
@@ -199,11 +195,11 @@ const OnboardingWizard = () => {
               {step === 0 && (
                 <div className="space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <div><Label>Nombre del Negocio</Label><Input placeholder="Ej: Estética Laura" value={data.businessName} onChange={(e) => update("businessName", e.target.value)} /></div>
-                    <div><Label>Tu Nombre</Label><Input placeholder="Laura García" value={data.ownerName} onChange={(e) => update("ownerName", e.target.value)} /></div>
+                    <div><Label>Nombre del Negocio</Label><Input placeholder="Ej: Estética María" value={data.businessName} onChange={(e) => update("businessName", e.target.value)} /></div>
+                    <div><Label>Tu Nombre</Label><Input placeholder="María García" value={data.ownerName} onChange={(e) => update("ownerName", e.target.value)} /></div>
                   </div>
                   <div>
-                    <Label>WhatsApp</Label><Input placeholder="+54 11 1234-5678" value={data.phone} onChange={(e) => update("phone", e.target.value)} />
+                    <Label>WhatsApp</Label><Input placeholder="+52 55 1234-5678" value={data.phone} onChange={(e) => update("phone", e.target.value)} />
                   </div>
                   <div>
                     <Label>Tipo de Servicio</Label>
@@ -217,9 +213,9 @@ const OnboardingWizard = () => {
                     </div>
                   </div>
                   {data.serviceType === "Otro" && (
-                    <div><Label>Especificá tu servicio</Label><Input placeholder="Ej: Consultoría IT" value={data.customService} onChange={(e) => update("customService", e.target.value)} /></div>
+                    <div><Label>Especifica tu servicio</Label><Input placeholder="Ej: Consultoría IT" value={data.customService} onChange={(e) => update("customService", e.target.value)} /></div>
                   )}
-                  <div><Label>Ubicación / Dirección</Label><Input placeholder="Av. Corrientes 1234, CABA" value={data.location} onChange={(e) => update("location", e.target.value)} /></div>
+                  <div><Label>Ubicación / Dirección</Label><Input placeholder="Av. Reforma 1234, CDMX" value={data.location} onChange={(e) => update("location", e.target.value)} /></div>
                 </div>
               )}
 
@@ -227,7 +223,7 @@ const OnboardingWizard = () => {
                 <div className="space-y-5">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div><Label>Duración del Turno (min)</Label><Input type="number" value={data.serviceDuration} onChange={(e) => update("serviceDuration", e.target.value)} /></div>
-                    <div><Label>Precio del Servicio ($)</Label><Input type="number" placeholder="5000" value={data.servicePrice} onChange={(e) => update("servicePrice", e.target.value)} /></div>
+                    <div><Label>Precio del Servicio ($)</Label><Input type="number" placeholder="500" value={data.servicePrice} onChange={(e) => update("servicePrice", e.target.value)} /></div>
                   </div>
                   <div>
                     <Label>Días de Trabajo</Label>
@@ -263,8 +259,8 @@ const OnboardingWizard = () => {
                   <div className="glass-card p-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-foreground">¿Requerís seña para confirmar?</p>
-                        <p className="text-sm text-muted-foreground">Cobrá un porcentaje al momento de reservar</p>
+                        <p className="font-medium text-foreground">¿Requieres anticipo para confirmar?</p>
+                        <p className="text-sm text-muted-foreground">Cobra un porcentaje al momento de reservar</p>
                       </div>
                       <button onClick={() => update("requiresDeposit", !data.requiresDeposit)}
                         className={`w-12 h-7 rounded-full transition-colors relative ${data.requiresDeposit ? "bg-primary" : "bg-muted"}`}>
@@ -272,7 +268,7 @@ const OnboardingWizard = () => {
                       </button>
                     </div>
                     {data.requiresDeposit && (
-                      <div className="mt-3"><Label>Porcentaje de Seña (%)</Label><Input type="number" value={data.depositPercent} onChange={(e) => update("depositPercent", e.target.value)} /></div>
+                      <div className="mt-3"><Label>Porcentaje de Anticipo (%)</Label><Input type="number" value={data.depositPercent} onChange={(e) => update("depositPercent", e.target.value)} /></div>
                     )}
                   </div>
                 </div>

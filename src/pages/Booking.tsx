@@ -266,7 +266,7 @@ const Booking = () => {
       setSuccess(true);
     } catch (err: any) {
       console.error(err);
-      toast.error("Error al crear la reserva. Intentá de nuevo.");
+      toast.error("Error al crear la reserva. Inténtalo de nuevo.");
     } finally {
       setSaving(false);
     }
@@ -337,7 +337,7 @@ const Booking = () => {
             {/* Step 0: Service Selection */}
             {step === 0 && (
               <motion.div key="step0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 className="font-display font-bold text-lg text-foreground mb-4">Elegí un servicio</h2>
+                <h2 className="font-display font-bold text-lg text-foreground mb-4">Elige un servicio</h2>
                 <div className="space-y-3">
                   {services.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4">No hay servicios disponibles.</p>
@@ -371,7 +371,7 @@ const Booking = () => {
             {/* Step 1: Date & Time */}
             {step === 1 && (
               <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 className="font-display font-bold text-lg text-foreground mb-4">Elegí fecha y hora</h2>
+                <h2 className="font-display font-bold text-lg text-foreground mb-4">Elige fecha y hora</h2>
                 <div className="space-y-4">
                   <div className="flex justify-center">
                     <Calendar
@@ -393,7 +393,7 @@ const Booking = () => {
                         </div>
                       ) : availableSlots.length === 0 ? (
                         <p className="text-sm text-muted-foreground text-center py-4 bg-muted/50 rounded-lg">
-                          No hay horarios disponibles para este día. Probá con otra fecha.
+                          No hay horarios disponibles para este día. Prueba con otra fecha.
                         </p>
                       ) : (
                         <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
@@ -430,7 +430,7 @@ const Booking = () => {
                   </div>
                   <div>
                     <Label>Teléfono / WhatsApp *</Label>
-                    <Input value={clientPhone} onChange={e => setClientPhone(e.target.value)} placeholder="+54 11 1234-5678" />
+                    <Input value={clientPhone} onChange={e => setClientPhone(e.target.value)} placeholder="+52 55 1234-5678" />
                   </div>
                   <div>
                     <Label>Email</Label>

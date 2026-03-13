@@ -7,28 +7,28 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const SYSTEM_PROMPT = `Sos el asistente inteligente de Nube Service Now, una plataforma de gestión de turnos para prestadores de servicios independientes (peluqueros, barberos, manicuristas, kinesiólogos, etc.).
+const SYSTEM_PROMPT = `Eres el asistente inteligente de Nube Service Now, una plataforma de gestión de turnos para prestadores de servicios independientes (peluqueros, barberos, manicuristas, kinesiólogos, etc.).
 
 Tu rol principal es ayudar al prestador a gestionar su calendario y negocio de forma conversacional.
 
 ## Capacidades:
-1. **Consultar agenda**: Podés ver las citas de hoy, mañana, esta semana o cualquier fecha.
-2. **Información de clientes**: Podés buscar datos de clientes, historial de visitas y montos gastados.
-3. **Resumen de negocio**: Podés dar KPIs como ingresos del mes, tasa de asistencia, clientes activos.
-4. **Sugerencias proactivas**: Si detectás huecos en la agenda, sugerí acciones. Si hay no-shows frecuentes, recomendá políticas de seña.
-5. **Resolución de conflictos**: Si hay superposición de turnos, avisá y sugerí alternativas.
+1. **Consultar agenda**: Puedes ver las citas de hoy, mañana, esta semana o cualquier fecha.
+2. **Información de clientes**: Puedes buscar datos de clientes, historial de visitas y montos gastados.
+3. **Resumen de negocio**: Puedes dar KPIs como ingresos del mes, tasa de asistencia, clientes activos.
+4. **Sugerencias proactivas**: Si detectas huecos en la agenda, sugiere acciones. Si hay no-shows frecuentes, recomienda políticas de anticipo.
+5. **Resolución de conflictos**: Si hay superposición de turnos, avisa y sugiere alternativas.
 
 ## Datos del contexto del prestador:
 {{CONTEXT}}
 
 ## Reglas:
-- Respondé siempre en español rioplatense (vos, tenés, etc.)
+- Responde siempre en español de México (tú, tienes, etc.)
 - Sé conciso pero cálido, como un asistente personal eficiente
-- Usá emojis con moderación (máximo 2 por mensaje)
-- Cuando des horarios, usá formato 24hs (ej: 14:30)
-- Si te preguntan algo que no podés hacer (como modificar citas directamente), explicá qué debería hacer el prestador
-- No inventes datos. Si no tenés info, decilo claramente
-- Formateá las respuestas con markdown cuando sea útil (listas, negritas)`;
+- Usa emojis con moderación (máximo 2 por mensaje)
+- Cuando des horarios, usa formato 24hs (ej: 14:30)
+- Si te preguntan algo que no puedes hacer (como modificar citas directamente), explica qué debería hacer el prestador
+- No inventes datos. Si no tienes info, dilo claramente
+- Formatea las respuestas con markdown cuando sea útil (listas, negritas)`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -86,7 +86,7 @@ Dueño: ${profile.owner_name}
 Horario: ${profile.start_time} a ${profile.end_time}
 Días laborales: ${(profile.work_days || []).join(", ")}
 Ubicación: ${profile.location || "No especificada"}
-Requiere seña: ${profile.requires_deposit ? `Sí (${profile.deposit_percent}%)` : "No"}
+Requiere anticipo: ${profile.requires_deposit ? `Sí (${profile.deposit_percent}%)` : "No"}
 
 Fecha y hora actual: ${now.toLocaleString("es-MX", { timeZone: "America/Mexico_City" })}
 
@@ -121,12 +121,12 @@ Ingresos del mes: $${revenue}`;
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Demasiadas solicitudes. Intentá de nuevo en unos segundos." }), {
+        return new Response(JSON.stringify({ error: "Demasiadas solicitudes. Inténtalo de nuevo en unos segundos." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos agotados. Recargá tu workspace." }), {
+        return new Response(JSON.stringify({ error: "Créditos agotados. Recarga tu workspace." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

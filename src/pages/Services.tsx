@@ -124,7 +124,7 @@ const Services = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">Servicios</h1>
-            <p className="text-muted-foreground">Gestioná tu catálogo de servicios.</p>
+            <p className="text-muted-foreground">Gestiona tu catálogo de servicios.</p>
           </div>
           <Button onClick={openNew} className="gap-2">
             <Plus className="w-4 h-4" /> Nuevo Servicio
@@ -135,7 +135,7 @@ const Services = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card p-12 text-center">
             <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-lg font-medium text-foreground mb-2">Sin servicios todavía</p>
-            <p className="text-muted-foreground mb-6">Agregá tu primer servicio para empezar a gestionar tu negocio.</p>
+            <p className="text-muted-foreground mb-6">Agrega tu primer servicio para empezar a gestionar tu negocio.</p>
             <Button onClick={openNew} className="gap-2"><Plus className="w-4 h-4" /> Agregar Servicio</Button>
           </motion.div>
         ) : (
@@ -194,7 +194,7 @@ const Services = () => {
           <DialogHeader>
             <DialogTitle>{editing ? "Editar Servicio" : "Nuevo Servicio"}</DialogTitle>
             <DialogDescription>
-              {editing ? "Modificá los datos del servicio." : "Completá los datos para crear un servicio."}
+              {editing ? "Modifica los datos del servicio." : "Completa los datos para crear un servicio."}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">

@@ -148,7 +148,7 @@ const AiAssistant = () => {
               {messages.length === 0 && (
                 <div className="text-center py-6">
                   <Bot className="w-10 h-10 text-primary mx-auto mb-3 opacity-60" />
-                  <p className="text-sm text-muted-foreground mb-4">¡Hola! Soy tu asistente. Preguntame sobre tu agenda, clientes o negocio.</p>
+                  <p className="text-sm text-muted-foreground mb-4">¡Hola! Soy tu asistente. Pregúntame sobre tu agenda, clientes o negocio.</p>
                   <div className="space-y-2">
                     {SUGGESTIONS.map((s) => (
                       <button
@@ -201,7 +201,7 @@ const AiAssistant = () => {
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Escribí tu consulta..."
+                  placeholder="Escribe tu consulta..."
                   className="flex-1 bg-muted rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring"
                   disabled={isLoading}
                 />
