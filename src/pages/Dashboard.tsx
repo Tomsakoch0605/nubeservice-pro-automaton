@@ -4,7 +4,7 @@ import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 type KpiData = {
   appointmentsThisMonth: number;
