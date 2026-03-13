@@ -154,9 +154,14 @@ const Dashboard = () => {
             <h1 className="text-3xl font-display font-bold text-foreground">Dashboard</h1>
             <p className="text-muted-foreground">Bienvenido de vuelta. Acá tenés un resumen de tu negocio.</p>
           </div>
-          <Link to="/clients" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
-            <Users className="w-4 h-4" /> Gestionar Clientes <ArrowRight className="w-3 h-3" />
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/clients" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+              <Users className="w-4 h-4" /> Clientes <ArrowRight className="w-3 h-3" />
+            </Link>
+            <Button onClick={() => setNewApptOpen(true)} className="gap-2">
+              <Plus className="w-4 h-4" /> Nueva Cita
+            </Button>
+          </div>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
