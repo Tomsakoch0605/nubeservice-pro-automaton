@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, XCircle, CheckCircle, AlertTriangle } from "lucide-react";
+import { Loader2, XCircle, CheckCircle, AlertTriangle, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ import {
 export type AppointmentDetail = {
   id: string;
   clientName: string;
+  clientPhone?: string | null;
   serviceName: string;
   time: string;
   status: string;
@@ -120,7 +121,19 @@ const EditAppointmentDialog = ({ open, onOpenChange, appointment, onUpdated }: E
           <div className="space-y-4 pt-2">
             {/* Read-only info */}
             <div className="p-3 rounded-lg bg-muted/50 space-y-1">
-              <p className="text-sm font-medium text-foreground">{appointment.clientName}</p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-foreground">{appointment.clientName}</p>
+                {appointment.clientPhone && (
+                  <a
+                    href={`https://wa.me/${appointment.clientPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`¡Hola ${appointment.clientName}! 👋 Te recordamos tu cita de ${appointment.serviceName} a las ${appointment.time}. ¡Te esperamos!`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium hover:bg-primary/20 transition-colors"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+                  </a>
+                )}
+              </div>
               <p className="text-xs text-muted-foreground">{appointment.serviceName} — {appointment.time}</p>
             </div>
 
