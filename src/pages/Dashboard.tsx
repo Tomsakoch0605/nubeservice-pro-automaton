@@ -188,6 +188,9 @@ const Dashboard = () => {
             <Link to="/services" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
               <Package className="w-4 h-4" /> Servicios
             </Link>
+            <Link to="/payments" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+              <DollarSign className="w-4 h-4" /> Pagos
+            </Link>
             {profileId && <NotificationsBell profileId={profileId} />}
             <Button onClick={() => setNewApptOpen(true)} className="gap-2">
               <Plus className="w-4 h-4" /> Nueva Cita
