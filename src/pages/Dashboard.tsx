@@ -94,6 +94,7 @@ const Dashboard = () => {
     setTodayAppts(todayData.map((a: any) => ({
       id: a.id,
       clientName: a.clients?.full_name || "Sin cliente",
+      clientPhone: a.clients?.phone || null,
       serviceName: a.services?.name || "Sin servicio",
       time: new Date(a.starts_at).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" }),
       status: a.status,
