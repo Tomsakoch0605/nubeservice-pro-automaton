@@ -161,7 +161,10 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center gap-4">
             <Link to="/clients" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
-              <Users className="w-4 h-4" /> Clientes <ArrowRight className="w-3 h-3" />
+              <Users className="w-4 h-4" /> Clientes
+            </Link>
+            <Link to="/calendar" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+              <CalendarDays className="w-4 h-4" /> Calendario
             </Link>
             <Button onClick={() => setNewApptOpen(true)} className="gap-2">
               <Plus className="w-4 h-4" /> Nueva Cita
