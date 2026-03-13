@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
+import MonthlyRevenueChart from "@/components/dashboard/MonthlyRevenueChart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -271,6 +272,9 @@ const Payments = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Monthly Revenue Chart */}
+        <MonthlyRevenueChart payments={payments} />
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
