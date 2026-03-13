@@ -218,6 +218,13 @@ const Payments = () => {
     await fetchPayments(profileId);
   };
 
+  const filtered = payments.filter((p) => {
+    const q = search.toLowerCase();
+    const matchSearch = p.client_name.toLowerCase().includes(q) || p.service_name.toLowerCase().includes(q);
+    const matchStatus = statusFilter === "all" || p.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
+
   const exportCSV = () => {
     if (filtered.length === 0) { toast.error("No hay pagos para exportar"); return; }
     const headers = ["Fecha", "Cliente", "Servicio", "Tipo", "Método", "Monto", "Estado", "Referencia"];
