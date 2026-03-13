@@ -4,6 +4,7 @@ import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
 import NewAppointmentDialog from "@/components/dashboard/NewAppointmentDialog";
 import EditAppointmentDialog, { type AppointmentDetail } from "@/components/dashboard/EditAppointmentDialog";
+import NotificationsBell from "@/components/dashboard/NotificationsBell";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, Link } from "react-router-dom";
@@ -166,6 +167,7 @@ const Dashboard = () => {
             <Link to="/calendar" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
               <CalendarDays className="w-4 h-4" /> Calendario
             </Link>
+            {profileId && <NotificationsBell profileId={profileId} />}
             <Button onClick={() => setNewApptOpen(true)} className="gap-2">
               <Plus className="w-4 h-4" /> Nueva Cita
             </Button>
