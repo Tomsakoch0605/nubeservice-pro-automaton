@@ -193,12 +193,19 @@ const Dashboard = () => {
                 {todayAppts.map((b) => {
                   const st = statusStyles[b.status] || statusStyles.pending;
                   return (
-                    <div key={b.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                    <div
+                      key={b.id}
+                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/80 cursor-pointer transition-colors"
+                      onClick={() => { setSelectedAppt(b); setEditApptOpen(true); }}
+                    >
                       <div>
                         <p className="font-medium text-foreground text-sm">{b.clientName}</p>
                         <p className="text-xs text-muted-foreground">{b.serviceName} — {b.time}</p>
                       </div>
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${st.className}`}>{st.label}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${st.className}`}>{st.label}</span>
+                        <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                      </div>
                     </div>
                   );
                 })}
