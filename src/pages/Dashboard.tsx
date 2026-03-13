@@ -45,7 +45,7 @@ const statusStyles: Record<string, { label: string; className: string }> = {
 };
 
 const formatCurrency = (n: number) =>
-  new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -93,7 +93,7 @@ const Dashboard = () => {
       id: a.id,
       clientName: a.clients?.full_name || "Sin cliente",
       serviceName: a.services?.name || "Sin servicio",
-      time: new Date(a.starts_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }),
+      time: new Date(a.starts_at).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" }),
       status: a.status,
       notes: a.notes,
     })));

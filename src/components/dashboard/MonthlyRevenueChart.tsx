@@ -16,7 +16,7 @@ const chartConfig = {
 };
 
 const formatCurrency = (n: number) =>
-  new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
 
 export default function MonthlyRevenueChart({ payments }: { payments: Payment[] }) {
   const data = useMemo(() => {

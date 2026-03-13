@@ -55,7 +55,7 @@ type Appointment = {
 };
 
 const formatCurrency = (n: number) =>
-  new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
 
 const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   completed: { label: "Completado", variant: "default" },
@@ -340,7 +340,7 @@ const Payments = () => {
                         className="border-b transition-colors hover:bg-muted/50"
                       >
                         <TableCell className="text-sm">
-                          {new Date(p.created_at).toLocaleDateString("es-AR", {
+                          {new Date(p.created_at).toLocaleDateString("es-MX", {
                             day: "2-digit",
                             month: "short",
                             year: "numeric",
@@ -388,7 +388,7 @@ const Payments = () => {
                 <SelectContent>
                   {appointments.map((a) => (
                     <SelectItem key={a.id} value={a.id}>
-                      {a.client_name} — {a.service_name} ({new Date(a.starts_at).toLocaleDateString("es-AR")})
+                      {a.client_name} — {a.service_name} ({new Date(a.starts_at).toLocaleDateString("es-MX")})
                     </SelectItem>
                   ))}
                 </SelectContent>

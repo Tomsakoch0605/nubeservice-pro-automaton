@@ -88,10 +88,10 @@ Días laborales: ${(profile.work_days || []).join(", ")}
 Ubicación: ${profile.location || "No especificada"}
 Requiere seña: ${profile.requires_deposit ? `Sí (${profile.deposit_percent}%)` : "No"}
 
-Fecha y hora actual: ${now.toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires" })}
+Fecha y hora actual: ${now.toLocaleString("es-MX", { timeZone: "America/Mexico_City" })}
 
 Citas de hoy (${todayAppts.data?.length || 0}):
-${(todayAppts.data || []).map((a: any) => `- ${new Date(a.starts_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })} | ${a.clients?.full_name} | ${a.services?.name} | Estado: ${a.status}`).join("\n") || "Sin citas hoy"}
+${(todayAppts.data || []).map((a: any) => `- ${new Date(a.starts_at).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })} | ${a.clients?.full_name} | ${a.services?.name} | Estado: ${a.status}`).join("\n") || "Sin citas hoy"}
 
 Citas esta semana: ${weekAppts.data?.length || 0}
 Clientes registrados: ${clients.data?.length || 0}

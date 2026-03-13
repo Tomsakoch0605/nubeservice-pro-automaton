@@ -39,7 +39,7 @@ type ClientForm = {
 const emptyForm: ClientForm = { full_name: "", phone: "", email: "", notes: "" };
 
 const formatCurrency = (n: number) =>
-  new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
 
 const Clients = () => {
   const [loading, setLoading] = useState(true);
