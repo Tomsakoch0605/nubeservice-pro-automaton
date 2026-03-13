@@ -48,6 +48,7 @@ const formatCurrency = (n: number) =>
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [profileId, setProfileId] = useState<string | null>(null);
+  const [profileSlug, setProfileSlug] = useState<string | null>(null);
   const [kpis, setKpis] = useState<KpiData>({ appointmentsThisMonth: 0, revenueThisMonth: 0, activeClients: 0, attendanceRate: 0 });
   const [todayAppts, setTodayAppts] = useState<TodayAppointment[]>([]);
   const [extra, setExtra] = useState<ExtraKpi>({ noShowRate: 0, popularService: "-", popularServiceCount: 0, avgRevenuePerClient: 0, recurringRate: 0 });
