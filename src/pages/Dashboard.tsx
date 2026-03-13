@@ -1,10 +1,10 @@
-import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2 } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 type KpiData = {
   appointmentsThisMonth: number;
@@ -147,9 +147,14 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-24 pb-12 px-4 container mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-display font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground">Bienvenido de vuelta. Acá tenés un resumen de tu negocio.</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-display font-bold text-foreground">Dashboard</h1>
+            <p className="text-muted-foreground">Bienvenido de vuelta. Acá tenés un resumen de tu negocio.</p>
+          </div>
+          <Link to="/clients" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+            <Users className="w-4 h-4" /> Gestionar Clientes <ArrowRight className="w-3 h-3" />
+          </Link>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
