@@ -148,7 +148,7 @@ const AiAssistant = () => {
               {messages.length === 0 && (
                 <div className="text-center py-6">
                   <Bot className="w-10 h-10 text-primary mx-auto mb-3 opacity-60" />
-                  <p className="text-sm text-muted-foreground mb-4">¡Hola! Soy tu asistente. Preguntame sobre tu agenda, clientes o negocio.</p>
+                  <p className="text-sm text-muted-foreground mb-4">¡Hola! Soy tu asistente. Pregúntame sobre tu agenda, clientes o negocio.</p>
                   <div className="space-y-2">
                     {SUGGESTIONS.map((s) => (
                       <button
