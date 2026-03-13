@@ -175,7 +175,7 @@ const Clients = () => {
           <div className="glass-card p-12 text-center">
             <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-40" />
             <p className="text-muted-foreground">
-              {search ? "No se encontraron clientes con esa búsqueda." : "Todavía no tenés clientes. ¡Agregá el primero!"}
+              {search ? "No se encontraron clientes con esa búsqueda." : "Todavía no tienes clientes. ¡Agrega el primero!"}
             </p>
           </div>
         ) : (
