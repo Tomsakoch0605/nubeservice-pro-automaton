@@ -218,12 +218,29 @@ const Payments = () => {
     await fetchPayments(profileId);
   };
 
-  const filtered = payments.filter((p) => {
-    const q = search.toLowerCase();
-    const matchSearch = p.client_name.toLowerCase().includes(q) || p.service_name.toLowerCase().includes(q);
-    const matchStatus = statusFilter === "all" || p.status === statusFilter;
-    return matchSearch && matchStatus;
-  });
+  const exportCSV = () => {
+    if (filtered.length === 0) { toast.error("No hay pagos para exportar"); return; }
+    const headers = ["Fecha", "Cliente", "Servicio", "Tipo", "Método", "Monto", "Estado", "Referencia"];
+    const rows = filtered.map(p => [
+      new Date(p.created_at).toLocaleDateString("es-MX"),
+      p.client_name,
+      p.service_name,
+      typeLabels[p.payment_type] || p.payment_type,
+      p.payment_method || "",
+      p.amount.toFixed(2),
+      statusConfig[p.status]?.label || p.status,
+      p.external_reference || "",
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `pagos_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Reporte exportado");
+  };
 
   if (loading) {
     return (
@@ -249,9 +266,14 @@ const Payments = () => {
             <h1 className="text-3xl font-display font-bold text-foreground">Pagos</h1>
             <p className="text-muted-foreground">Registra cobros y consulta tu historial de ingresos.</p>
           </div>
-          <Button onClick={openNew} className="gap-2">
-            <Plus className="w-4 h-4" /> Registrar Pago
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={exportCSV} className="gap-2">
+              <Download className="w-4 h-4" /> Exportar CSV
+            </Button>
+            <Button onClick={openNew} className="gap-2">
+              <Plus className="w-4 h-4" /> Registrar Pago
+            </Button>
+          </div>
         </div>
 
         {/* Summary Cards */}
