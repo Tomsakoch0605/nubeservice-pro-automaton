@@ -1,8 +1,9 @@
-import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
 import NewAppointmentDialog from "@/components/dashboard/NewAppointmentDialog";
+import EditAppointmentDialog, { type AppointmentDetail } from "@/components/dashboard/EditAppointmentDialog";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, Link } from "react-router-dom";
@@ -21,6 +22,7 @@ type TodayAppointment = {
   serviceName: string;
   time: string;
   status: string;
+  notes: string | null;
 };
 
 type ExtraKpi = {
@@ -49,6 +51,8 @@ const Dashboard = () => {
   const [todayAppts, setTodayAppts] = useState<TodayAppointment[]>([]);
   const [extra, setExtra] = useState<ExtraKpi>({ noShowRate: 0, popularService: "-", popularServiceCount: 0, avgRevenuePerClient: 0, recurringRate: 0 });
   const [newApptOpen, setNewApptOpen] = useState(false);
+  const [editApptOpen, setEditApptOpen] = useState(false);
+  const [selectedAppt, setSelectedAppt] = useState<AppointmentDetail | null>(null);
   const navigate = useNavigate();
 
   const loadData = useCallback(async (pid: string) => {
@@ -62,7 +66,7 @@ const Dashboard = () => {
       supabase.from("appointments").select("id, status, service_id").eq("profile_id", pid).gte("starts_at", startOfMonth).lte("starts_at", endOfMonth),
       supabase.from("payments").select("amount, status").eq("profile_id", pid).gte("created_at", startOfMonth).lte("created_at", endOfMonth),
       supabase.from("clients").select("id, total_visits, total_spent").eq("profile_id", pid),
-      supabase.from("appointments").select("id, status, starts_at, clients(full_name), services(name)").eq("profile_id", pid).gte("starts_at", todayStart).lte("starts_at", todayEnd).order("starts_at"),
+      supabase.from("appointments").select("id, status, starts_at, notes, clients(full_name), services(name)").eq("profile_id", pid).gte("starts_at", todayStart).lte("starts_at", todayEnd).order("starts_at"),
     ]);
 
     const appts = apptRes.data || [];
@@ -87,6 +91,7 @@ const Dashboard = () => {
       serviceName: a.services?.name || "Sin servicio",
       time: new Date(a.starts_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }),
       status: a.status,
+      notes: a.notes,
     })));
 
     const serviceCounts: Record<string, number> = {};
@@ -188,12 +193,19 @@ const Dashboard = () => {
                 {todayAppts.map((b) => {
                   const st = statusStyles[b.status] || statusStyles.pending;
                   return (
-                    <div key={b.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                    <div
+                      key={b.id}
+                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/80 cursor-pointer transition-colors"
+                      onClick={() => { setSelectedAppt(b); setEditApptOpen(true); }}
+                    >
                       <div>
                         <p className="font-medium text-foreground text-sm">{b.clientName}</p>
                         <p className="text-xs text-muted-foreground">{b.serviceName} — {b.time}</p>
                       </div>
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${st.className}`}>{st.label}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${st.className}`}>{st.label}</span>
+                        <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                      </div>
                     </div>
                   );
                 })}
@@ -232,6 +244,12 @@ const Dashboard = () => {
           onCreated={() => loadData(profileId)}
         />
       )}
+      <EditAppointmentDialog
+        open={editApptOpen}
+        onOpenChange={setEditApptOpen}
+        appointment={selectedAppt}
+        onUpdated={() => profileId && loadData(profileId)}
+      />
       <AiAssistant />
     </div>
   );
