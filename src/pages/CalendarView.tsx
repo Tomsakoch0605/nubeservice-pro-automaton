@@ -126,7 +126,7 @@ const CalendarView = () => {
       id: a.id,
       clientName: a.clientName,
       serviceName: a.serviceName,
-      time: new Date(a.starts_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }),
+      time: new Date(a.starts_at).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" }),
       status: a.status,
       notes: a.notes,
     });
