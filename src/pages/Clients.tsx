@@ -152,7 +152,7 @@ const Clients = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">Clientes</h1>
-            <p className="text-muted-foreground">Gestioná tu cartera de clientes.</p>
+            <p className="text-muted-foreground">Gestiona tu cartera de clientes.</p>
           </div>
           <Button onClick={openNew} className="gap-2">
             <Plus className="w-4 h-4" /> Nuevo Cliente
