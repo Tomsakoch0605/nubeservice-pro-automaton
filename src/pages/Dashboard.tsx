@@ -162,7 +162,7 @@ const Dashboard = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">Dashboard</h1>
-            <p className="text-muted-foreground">Bienvenido de vuelta. Acá tenés un resumen de tu negocio.</p>
+            <p className="text-muted-foreground">Bienvenido de nuevo. Aquí tienes un resumen de tu negocio.</p>
             {profileSlug && (
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-xs text-muted-foreground">Link de reservas:</span>

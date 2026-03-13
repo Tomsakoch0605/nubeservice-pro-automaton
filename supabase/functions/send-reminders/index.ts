@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
         await supabase.from("notifications").insert({
           profile_id: profileId,
           title: "Resumen de mañana",
-          message: `Tenés ${profileAppts.length} citas programadas para mañana.`,
+          message: `Tienes ${profileAppts.length} citas programadas para mañana.`,
           type: "summary",
         });
         notificationsCreated++;

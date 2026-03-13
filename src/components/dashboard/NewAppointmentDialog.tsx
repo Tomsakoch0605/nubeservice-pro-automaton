@@ -220,7 +220,7 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
               <Label>Hora *</Label>
               <Select value={time} onValueChange={setTime}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccioná un horario" />
+                  <SelectValue placeholder="Selecciona un horario" />
                 </SelectTrigger>
                 <SelectContent>
                   {timeSlots.map(t => (

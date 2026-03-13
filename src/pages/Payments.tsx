@@ -414,7 +414,7 @@ const Payments = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="full">Pago total</SelectItem>
-                  <SelectItem value="deposit">Seña</SelectItem>
+                  <SelectItem value="deposit">Anticipo</SelectItem>
                   <SelectItem value="remaining">Saldo restante</SelectItem>
                 </SelectContent>
               </Select>

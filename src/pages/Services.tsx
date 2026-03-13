@@ -194,7 +194,7 @@ const Services = () => {
           <DialogHeader>
             <DialogTitle>{editing ? "Editar Servicio" : "Nuevo Servicio"}</DialogTitle>
             <DialogDescription>
-              {editing ? "Modificá los datos del servicio." : "Completá los datos para crear un servicio."}
+              {editing ? "Modifica los datos del servicio." : "Completa los datos para crear un servicio."}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">

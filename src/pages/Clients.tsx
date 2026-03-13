@@ -247,7 +247,7 @@ const Clients = () => {
                 id="phone"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                placeholder="+54 11 1234-5678"
+                placeholder="+52 55 1234-5678"
               />
             </div>
             <div>

@@ -184,7 +184,7 @@ const EditAppointmentDialog = ({ open, onOpenChange, appointment, onUpdated }: E
               <AlertTriangle className="w-5 h-5 text-destructive" /> Cancelar cita
             </AlertDialogTitle>
             <AlertDialogDescription>
-              ¿Estás seguro de que querés cancelar la cita de <strong>{appointment.clientName}</strong> a las <strong>{appointment.time}</strong>? Esta acción no se puede deshacer.
+              ¿Estás seguro de que quieres cancelar la cita de <strong>{appointment.clientName}</strong> a las <strong>{appointment.time}</strong>? Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

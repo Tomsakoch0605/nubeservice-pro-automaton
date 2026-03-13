@@ -430,7 +430,7 @@ const Booking = () => {
                   </div>
                   <div>
                     <Label>Teléfono / WhatsApp *</Label>
-                    <Input value={clientPhone} onChange={e => setClientPhone(e.target.value)} placeholder="+54 11 1234-5678" />
+                    <Input value={clientPhone} onChange={e => setClientPhone(e.target.value)} placeholder="+52 55 1234-5678" />
                   </div>
                   <div>
                     <Label>Email</Label>
