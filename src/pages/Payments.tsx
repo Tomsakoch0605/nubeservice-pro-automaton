@@ -66,7 +66,7 @@ const statusConfig: Record<string, { label: string; variant: "default" | "second
 
 const typeLabels: Record<string, string> = {
   full: "Pago total",
-  deposit: "Seña",
+  deposit: "Anticipo",
   remaining: "Saldo",
 };
 
