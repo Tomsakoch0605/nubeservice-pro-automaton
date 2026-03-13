@@ -224,6 +224,14 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+      {profileId && (
+        <NewAppointmentDialog
+          open={newApptOpen}
+          onOpenChange={setNewApptOpen}
+          profileId={profileId}
+          onCreated={() => loadData(profileId)}
+        />
+      )}
       <AiAssistant />
     </div>
   );
