@@ -146,7 +146,7 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
               <Label>Cliente *</Label>
               <Select value={clientId} onValueChange={setClientId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccioná un cliente" />
+                  <SelectValue placeholder="Selecciona un cliente" />
                 </SelectTrigger>
                 <SelectContent>
                   {clients.length === 0 ? (
