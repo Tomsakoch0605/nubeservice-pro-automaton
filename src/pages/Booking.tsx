@@ -393,7 +393,7 @@ const Booking = () => {
                         </div>
                       ) : availableSlots.length === 0 ? (
                         <p className="text-sm text-muted-foreground text-center py-4 bg-muted/50 rounded-lg">
-                          No hay horarios disponibles para este día. Probá con otra fecha.
+                          No hay horarios disponibles para este día. Prueba con otra fecha.
                         </p>
                       ) : (
                         <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
