@@ -8,6 +8,7 @@ import NotificationsBell from "@/components/dashboard/NotificationsBell";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 type KpiData = {
