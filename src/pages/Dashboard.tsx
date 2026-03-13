@@ -1,4 +1,4 @@
-import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus, Pencil, CalendarDays, Package, Share2, Copy } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus, Pencil, CalendarDays, Package, Share2, Copy, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
@@ -23,6 +23,7 @@ type KpiData = {
 type TodayAppointment = {
   id: string;
   clientName: string;
+  clientPhone: string | null;
   serviceName: string;
   time: string;
   status: string;
@@ -71,7 +72,7 @@ const Dashboard = () => {
       supabase.from("appointments").select("id, status, service_id").eq("profile_id", pid).gte("starts_at", startOfMonth).lte("starts_at", endOfMonth),
       supabase.from("payments").select("amount, status").eq("profile_id", pid).gte("created_at", startOfMonth).lte("created_at", endOfMonth),
       supabase.from("clients").select("id, total_visits, total_spent").eq("profile_id", pid),
-      supabase.from("appointments").select("id, status, starts_at, notes, clients(full_name), services(name)").eq("profile_id", pid).gte("starts_at", todayStart).lte("starts_at", todayEnd).order("starts_at"),
+      supabase.from("appointments").select("id, status, starts_at, notes, clients(full_name, phone), services(name)").eq("profile_id", pid).gte("starts_at", todayStart).lte("starts_at", todayEnd).order("starts_at"),
     ]);
 
     const appts = apptRes.data || [];
@@ -93,6 +94,7 @@ const Dashboard = () => {
     setTodayAppts(todayData.map((a: any) => ({
       id: a.id,
       clientName: a.clients?.full_name || "Sin cliente",
+      clientPhone: a.clients?.phone || null,
       serviceName: a.services?.name || "Sin servicio",
       time: new Date(a.starts_at).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" }),
       status: a.status,
@@ -226,16 +228,27 @@ const Dashboard = () => {
                   return (
                     <div
                       key={b.id}
-                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/80 cursor-pointer transition-colors"
-                      onClick={() => { setSelectedAppt(b); setEditApptOpen(true); }}
+                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/80 transition-colors"
                     >
-                      <div>
+                      <div className="cursor-pointer flex-1" onClick={() => { setSelectedAppt(b); setEditApptOpen(true); }}>
                         <p className="font-medium text-foreground text-sm">{b.clientName}</p>
                         <p className="text-xs text-muted-foreground">{b.serviceName} — {b.time}</p>
                       </div>
                       <div className="flex items-center gap-2">
+                        {b.clientPhone && (
+                          <a
+                            href={`https://wa.me/${b.clientPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`¡Hola ${b.clientName}! 👋 Te recordamos tu cita de ${b.serviceName} hoy a las ${b.time}. ¡Te esperamos!`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="p-1.5 rounded-full hover:bg-primary/10 transition-colors"
+                            title="Enviar recordatorio por WhatsApp"
+                          >
+                            <MessageCircle className="w-4 h-4 text-primary" />
+                          </a>
+                        )}
                         <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${st.className}`}>{st.label}</span>
-                        <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                        <Pencil className="w-3.5 h-3.5 text-muted-foreground cursor-pointer" onClick={() => { setSelectedAppt(b); setEditApptOpen(true); }} />
                       </div>
                     </div>
                   );
