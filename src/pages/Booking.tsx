@@ -371,7 +371,7 @@ const Booking = () => {
             {/* Step 1: Date & Time */}
             {step === 1 && (
               <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 className="font-display font-bold text-lg text-foreground mb-4">Elegí fecha y hora</h2>
+                <h2 className="font-display font-bold text-lg text-foreground mb-4">Elige fecha y hora</h2>
                 <div className="space-y-4">
                   <div className="flex justify-center">
                     <Calendar
