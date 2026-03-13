@@ -199,7 +199,7 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP", { locale: es }) : "Seleccioná una fecha"}
+                    {date ? format(date, "PPP", { locale: es }) : "Selecciona una fecha"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
