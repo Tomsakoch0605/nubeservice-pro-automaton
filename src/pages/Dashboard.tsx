@@ -23,6 +23,7 @@ type KpiData = {
 type TodayAppointment = {
   id: string;
   clientName: string;
+  clientPhone: string | null;
   serviceName: string;
   time: string;
   status: string;
