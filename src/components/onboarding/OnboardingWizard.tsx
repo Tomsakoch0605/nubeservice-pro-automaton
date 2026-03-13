@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowRight, Check, Calendar, Clock, CreditCard } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Calendar, Clock, CreditCard, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type FormData = {
   businessName: string;
   ownerName: string;
-  email: string;
   phone: string;
   serviceType: string;
   customService: string;
@@ -33,7 +34,7 @@ const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "
 const payments = ["Mercado Pago", "Transferencia Bancaria", "Efectivo", "Tarjeta (Stripe)"];
 
 const initial: FormData = {
-  businessName: "", ownerName: "", email: "", phone: "",
+  businessName: "", ownerName: "", phone: "",
   serviceType: "", customService: "", serviceDuration: "60", servicePrice: "",
   location: "", workDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
   startTime: "09:00", endTime: "18:00",
@@ -68,7 +69,19 @@ const stepTitles = [
 const OnboardingWizard = () => {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<FormData>(initial);
+  const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error("Necesitás iniciar sesión primero");
+        navigate("/auth");
+      }
+    };
+    checkAuth();
+  }, [navigate]);
 
   const update = (field: keyof FormData, value: any) => setData((p) => ({ ...p, [field]: value }));
 
@@ -81,9 +94,67 @@ const OnboardingWizard = () => {
 
   const next = () => step < 2 && setStep(step + 1);
   const prev = () => step > 0 && setStep(step - 1);
-  const finish = () => {
-    console.log("Onboarding data:", data);
-    navigate("/dashboard");
+
+  const finish = async () => {
+    setSaving(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("No hay sesión activa");
+
+      // Get user's profile
+      const { data: profile, error: profileFetchError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("user_id", session.user.id)
+        .single();
+
+      if (profileFetchError) throw profileFetchError;
+
+      const serviceLabel = data.serviceType === "Otro" ? data.customService : data.serviceType;
+
+      // Update profile
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({
+          business_name: data.businessName,
+          owner_name: data.ownerName,
+          phone: data.phone,
+          service_type: serviceLabel,
+          location: data.location,
+          work_days: data.workDays,
+          start_time: data.startTime,
+          end_time: data.endTime,
+          payment_methods: data.paymentMethods,
+          requires_deposit: data.requiresDeposit,
+          deposit_percent: data.requiresDeposit ? parseInt(data.depositPercent) : null,
+          onboarding_completed: true,
+        })
+        .eq("id", profile.id);
+
+      if (profileError) throw profileError;
+
+      // Create first service
+      if (serviceLabel && data.servicePrice) {
+        const { error: serviceError } = await supabase
+          .from("services")
+          .insert({
+            profile_id: profile.id,
+            name: serviceLabel,
+            duration_minutes: parseInt(data.serviceDuration) || 60,
+            price: parseFloat(data.servicePrice) || 0,
+          });
+
+        if (serviceError) throw serviceError;
+      }
+
+      toast.success("¡Configuración guardada exitosamente!");
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error("Onboarding error:", error);
+      toast.error(error.message || "Error al guardar la configuración");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const Icon = stepTitles[step].icon;
@@ -122,9 +193,8 @@ const OnboardingWizard = () => {
                     <div><Label>Nombre del Negocio</Label><Input placeholder="Ej: Estética Laura" value={data.businessName} onChange={(e) => update("businessName", e.target.value)} /></div>
                     <div><Label>Tu Nombre</Label><Input placeholder="Laura García" value={data.ownerName} onChange={(e) => update("ownerName", e.target.value)} /></div>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div><Label>Email</Label><Input type="email" placeholder="laura@email.com" value={data.email} onChange={(e) => update("email", e.target.value)} /></div>
-                    <div><Label>WhatsApp</Label><Input placeholder="+54 11 1234-5678" value={data.phone} onChange={(e) => update("phone", e.target.value)} /></div>
+                  <div>
+                    <Label>WhatsApp</Label><Input placeholder="+54 11 1234-5678" value={data.phone} onChange={(e) => update("phone", e.target.value)} />
                   </div>
                   <div>
                     <Label>Tipo de Servicio</Label>
@@ -210,8 +280,8 @@ const OnboardingWizard = () => {
                 Siguiente <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             ) : (
-              <Button variant="hero" onClick={finish}>
-                Finalizar Configuración <Check className="w-4 h-4 ml-1" />
+              <Button variant="hero" onClick={finish} disabled={saving}>
+                {saving ? <><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Guardando...</> : <>Finalizar Configuración <Check className="w-4 h-4 ml-1" /></>}
               </Button>
             )}
           </div>
