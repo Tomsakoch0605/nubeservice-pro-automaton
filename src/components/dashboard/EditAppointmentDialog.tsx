@@ -32,6 +32,7 @@ import {
 export type AppointmentDetail = {
   id: string;
   clientName: string;
+  clientPhone?: string | null;
   serviceName: string;
   time: string;
   status: string;
