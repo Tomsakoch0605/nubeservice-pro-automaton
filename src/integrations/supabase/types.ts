@@ -14,7 +14,285 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appointments: {
+        Row: {
+          client_id: string
+          created_at: string
+          ends_at: string
+          id: string
+          notes: string | null
+          profile_id: string
+          reminder_sent: boolean | null
+          service_id: string
+          starts_at: string
+          status: Database["public"]["Enums"]["appointment_status"]
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          ends_at: string
+          id?: string
+          notes?: string | null
+          profile_id: string
+          reminder_sent?: boolean | null
+          service_id: string
+          starts_at: string
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          ends_at?: string
+          id?: string
+          notes?: string | null
+          profile_id?: string
+          reminder_sent?: boolean | null
+          service_id?: string
+          starts_at?: string
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          last_visit_at: string | null
+          notes: string | null
+          phone: string | null
+          profile_id: string
+          total_spent: number | null
+          total_visits: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          last_visit_at?: string | null
+          notes?: string | null
+          phone?: string | null
+          profile_id: string
+          total_spent?: number | null
+          total_visits?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          last_visit_at?: string | null
+          notes?: string | null
+          phone?: string | null
+          profile_id?: string
+          total_spent?: number | null
+          total_visits?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clients_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          appointment_id: string
+          client_id: string
+          created_at: string
+          external_reference: string | null
+          id: string
+          payment_method: string | null
+          payment_type: Database["public"]["Enums"]["payment_type"]
+          profile_id: string
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          appointment_id: string
+          client_id: string
+          created_at?: string
+          external_reference?: string | null
+          id?: string
+          payment_method?: string | null
+          payment_type?: Database["public"]["Enums"]["payment_type"]
+          profile_id: string
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          appointment_id?: string
+          client_id?: string
+          created_at?: string
+          external_reference?: string | null
+          id?: string
+          payment_method?: string | null
+          payment_type?: Database["public"]["Enums"]["payment_type"]
+          profile_id?: string
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          business_name: string
+          created_at: string
+          deposit_percent: number | null
+          end_time: string | null
+          id: string
+          location: string | null
+          onboarding_completed: boolean | null
+          owner_name: string
+          payment_methods: string[] | null
+          phone: string | null
+          requires_deposit: boolean | null
+          service_type: string | null
+          start_time: string | null
+          updated_at: string
+          user_id: string
+          work_days: string[] | null
+        }
+        Insert: {
+          business_name?: string
+          created_at?: string
+          deposit_percent?: number | null
+          end_time?: string | null
+          id?: string
+          location?: string | null
+          onboarding_completed?: boolean | null
+          owner_name?: string
+          payment_methods?: string[] | null
+          phone?: string | null
+          requires_deposit?: boolean | null
+          service_type?: string | null
+          start_time?: string | null
+          updated_at?: string
+          user_id: string
+          work_days?: string[] | null
+        }
+        Update: {
+          business_name?: string
+          created_at?: string
+          deposit_percent?: number | null
+          end_time?: string | null
+          id?: string
+          location?: string | null
+          onboarding_completed?: boolean | null
+          owner_name?: string
+          payment_methods?: string[] | null
+          phone?: string | null
+          requires_deposit?: boolean | null
+          service_type?: string | null
+          start_time?: string | null
+          updated_at?: string
+          user_id?: string
+          work_days?: string[] | null
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration_minutes: number
+          id: string
+          is_active: boolean | null
+          name: string
+          price: number
+          profile_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price?: number
+          profile_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price?: number
+          profile_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +301,14 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      appointment_status:
+        | "pending"
+        | "confirmed"
+        | "completed"
+        | "cancelled"
+        | "no_show"
+      payment_status: "pending" | "completed" | "refunded" | "failed"
+      payment_type: "deposit" | "full" | "remaining"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +435,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      appointment_status: [
+        "pending",
+        "confirmed",
+        "completed",
+        "cancelled",
+        "no_show",
+      ],
+      payment_status: ["pending", "completed", "refunded", "failed"],
+      payment_type: ["deposit", "full", "remaining"],
+    },
   },
 } as const
