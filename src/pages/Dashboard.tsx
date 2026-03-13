@@ -4,6 +4,7 @@ import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
 import NewAppointmentDialog from "@/components/dashboard/NewAppointmentDialog";
 import EditAppointmentDialog, { type AppointmentDetail } from "@/components/dashboard/EditAppointmentDialog";
+import NotificationsBell from "@/components/dashboard/NotificationsBell";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, Link } from "react-router-dom";
