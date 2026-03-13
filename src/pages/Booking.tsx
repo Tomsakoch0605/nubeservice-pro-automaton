@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -12,13 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 type Profile = {
   id: string;
@@ -37,6 +30,11 @@ type Service = {
   description: string | null;
   duration_minutes: number;
   price: number;
+};
+
+type ExistingAppointment = {
+  starts_at: string;
+  ends_at: string;
 };
 
 const dayMap: Record<string, number> = {
@@ -91,6 +89,10 @@ const Booking = () => {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  // Availability
+  const [existingAppts, setExistingAppts] = useState<ExistingAppointment[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+
   // Form state
   const [serviceId, setServiceId] = useState("");
   const [date, setDate] = useState<Date>();
@@ -109,10 +111,7 @@ const Booking = () => {
         .eq("slug", slug)
         .maybeSingle();
 
-      if (!prof) {
-        setLoading(false);
-        return;
-      }
+      if (!prof) { setLoading(false); return; }
       setProfile(prof);
 
       const { data: svcs } = await supabase
@@ -130,15 +129,73 @@ const Booking = () => {
 
   const selectedService = services.find(s => s.id === serviceId);
 
+  // Fetch existing appointments for the selected date
+  const fetchAppointments = useCallback(async (selectedDate: Date) => {
+    if (!profile) return;
+    setLoadingSlots(true);
+
+    const dayStart = new Date(selectedDate);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(selectedDate);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    const { data } = await supabase
+      .from("appointments")
+      .select("starts_at, ends_at")
+      .eq("profile_id", profile.id)
+      .in("status", ["pending", "confirmed"])
+      .gte("starts_at", dayStart.toISOString())
+      .lte("starts_at", dayEnd.toISOString());
+
+    setExistingAppts((data || []).map(a => ({ starts_at: a.starts_at, ends_at: a.ends_at })));
+    setLoadingSlots(false);
+  }, [profile]);
+
+  // Re-fetch when date changes
+  useEffect(() => {
+    if (date) {
+      setTime(""); // reset time when date changes
+      fetchAppointments(date);
+    }
+  }, [date, fetchAppointments]);
+
   const workDayNumbers = useMemo(() =>
     (profile?.work_days || []).map(d => dayMap[d]).filter(n => n !== undefined),
     [profile?.work_days]
   );
 
-  const timeSlots = useMemo(() =>
+  const allTimeSlots = useMemo(() =>
     generateTimeSlots(profile?.start_time || "09:00", profile?.end_time || "18:00"),
     [profile?.start_time, profile?.end_time]
   );
+
+  // Filter out occupied slots
+  const availableSlots = useMemo(() => {
+    if (!selectedService || !date) return allTimeSlots;
+
+    const duration = selectedService.duration_minutes;
+
+    return allTimeSlots.filter(slot => {
+      const [h, m] = slot.split(":").map(Number);
+      const slotStart = new Date(date);
+      slotStart.setHours(h, m, 0, 0);
+      const slotEnd = new Date(slotStart.getTime() + duration * 60 * 1000);
+
+      // Check the slot doesn't exceed business hours
+      const [eh, em] = (profile?.end_time || "18:00").split(":").map(Number);
+      const businessEnd = new Date(date);
+      businessEnd.setHours(eh, em, 0, 0);
+      if (slotEnd > businessEnd) return false;
+
+      // Check overlap with existing appointments
+      return !existingAppts.some(appt => {
+        const apptStart = new Date(appt.starts_at).getTime();
+        const apptEnd = new Date(appt.ends_at).getTime();
+        // Overlap: slotStart < apptEnd AND slotEnd > apptStart
+        return slotStart.getTime() < apptEnd && slotEnd.getTime() > apptStart;
+      });
+    });
+  }, [allTimeSlots, existingAppts, selectedService, date, profile?.end_time]);
 
   const isDateDisabled = (d: Date) => {
     if (d < new Date(new Date().setHours(0, 0, 0, 0))) return true;
@@ -327,16 +384,33 @@ const Booking = () => {
                   {date && (
                     <div>
                       <Label className="mb-2 block">Hora</Label>
-                      <Select value={time} onValueChange={setTime}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleccioná un horario" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {timeSlots.map(t => (
-                            <SelectItem key={t} value={t}>{t}</SelectItem>
+                      {loadingSlots ? (
+                        <div className="flex items-center justify-center py-4">
+                          <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                          <span className="ml-2 text-sm text-muted-foreground">Cargando disponibilidad...</span>
+                        </div>
+                      ) : availableSlots.length === 0 ? (
+                        <p className="text-sm text-muted-foreground text-center py-4 bg-muted/50 rounded-lg">
+                          No hay horarios disponibles para este día. Probá con otra fecha.
+                        </p>
+                      ) : (
+                        <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
+                          {availableSlots.map(t => (
+                            <button
+                              key={t}
+                              onClick={() => setTime(t)}
+                              className={cn(
+                                "py-2 px-1 rounded-lg text-sm font-medium transition-all border",
+                                time === t
+                                  ? "bg-primary text-primary-foreground border-primary"
+                                  : "bg-card border-border text-foreground hover:border-primary/50"
+                              )}
+                            >
+                              {t}
+                            </button>
                           ))}
-                        </SelectContent>
-                      </Select>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
