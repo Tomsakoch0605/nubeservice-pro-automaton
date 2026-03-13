@@ -244,6 +244,12 @@ const Dashboard = () => {
           onCreated={() => loadData(profileId)}
         />
       )}
+      <EditAppointmentDialog
+        open={editApptOpen}
+        onOpenChange={setEditApptOpen}
+        appointment={selectedAppt}
+        onUpdated={() => profileId && loadData(profileId)}
+      />
       <AiAssistant />
     </div>
   );
