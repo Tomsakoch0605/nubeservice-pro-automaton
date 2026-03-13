@@ -337,7 +337,7 @@ const Booking = () => {
             {/* Step 0: Service Selection */}
             {step === 0 && (
               <motion.div key="step0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 className="font-display font-bold text-lg text-foreground mb-4">Elegí un servicio</h2>
+                <h2 className="font-display font-bold text-lg text-foreground mb-4">Elige un servicio</h2>
                 <div className="space-y-3">
                   {services.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4">No hay servicios disponibles.</p>
