@@ -45,7 +45,7 @@ const statusStyles: Record<string, { label: string; className: string }> = {
 };
 
 const formatCurrency = (n: number) =>
-  new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
