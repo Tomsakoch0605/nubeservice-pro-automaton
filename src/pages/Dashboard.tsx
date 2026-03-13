@@ -48,6 +48,7 @@ const Dashboard = () => {
   const [kpis, setKpis] = useState<KpiData>({ appointmentsThisMonth: 0, revenueThisMonth: 0, activeClients: 0, attendanceRate: 0 });
   const [todayAppts, setTodayAppts] = useState<TodayAppointment[]>([]);
   const [extra, setExtra] = useState<ExtraKpi>({ noShowRate: 0, popularService: "-", popularServiceCount: 0, avgRevenuePerClient: 0, recurringRate: 0 });
+  const [newApptOpen, setNewApptOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
