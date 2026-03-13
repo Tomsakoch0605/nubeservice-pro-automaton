@@ -306,7 +306,7 @@ const WeekView = ({ appointments, currentDate, onApptClick }: {
                       )}
                     >
                       <span className={cn("inline-block w-1.5 h-1.5 rounded-full mr-1", statusDot[a.status] || "bg-muted-foreground")} />
-                      {new Date(a.starts_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })} {a.clientName.split(" ")[0]}
+                      {new Date(a.starts_at).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })} {a.clientName.split(" ")[0]}
                     </button>
                   ))}
                 </div>
