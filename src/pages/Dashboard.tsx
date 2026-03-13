@@ -265,6 +265,12 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+        {profileId && (
+          <div className="mt-6">
+            <SettingsSection profileId={profileId} />
+          </div>
+        )}
       </main>
       {profileId && (
         <NewAppointmentDialog
