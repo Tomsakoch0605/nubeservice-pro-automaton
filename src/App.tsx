@@ -8,6 +8,7 @@ import Auth from "./pages/Auth.tsx";
 import Onboarding from "./pages/Onboarding.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Clients from "./pages/Clients.tsx";
+import CalendarView from "./pages/CalendarView.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/clients" element={<Clients />} />
+          <Route path="/calendar" element={<CalendarView />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
