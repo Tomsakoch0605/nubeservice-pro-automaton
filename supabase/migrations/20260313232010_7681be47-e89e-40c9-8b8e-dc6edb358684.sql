@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX idx_profiles_slug_unique ON public.profiles (slug) WHERE slug IS NOT NULL;
