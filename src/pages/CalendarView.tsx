@@ -127,6 +127,7 @@ const CalendarView = () => {
     setSelectedAppt({
       id: a.id,
       clientName: a.clientName,
+      clientPhone: a.clientPhone,
       serviceName: a.serviceName,
       time: new Date(a.starts_at).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" }),
       status: a.status,
