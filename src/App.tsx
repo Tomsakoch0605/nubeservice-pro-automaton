@@ -11,6 +11,7 @@ import Clients from "./pages/Clients.tsx";
 import CalendarView from "./pages/CalendarView.tsx";
 import Services from "./pages/Services.tsx";
 import Booking from "./pages/Booking.tsx";
+import Payments from "./pages/Payments.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
