@@ -128,6 +128,54 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          appointment_id: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          profile_id: string
+          title: string
+          type: string
+        }
+        Insert: {
+          appointment_id?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          profile_id: string
+          title: string
+          type?: string
+        }
+        Update: {
+          appointment_id?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          profile_id?: string
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount: number
