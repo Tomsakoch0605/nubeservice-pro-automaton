@@ -51,6 +51,8 @@ const Dashboard = () => {
   const [todayAppts, setTodayAppts] = useState<TodayAppointment[]>([]);
   const [extra, setExtra] = useState<ExtraKpi>({ noShowRate: 0, popularService: "-", popularServiceCount: 0, avgRevenuePerClient: 0, recurringRate: 0 });
   const [newApptOpen, setNewApptOpen] = useState(false);
+  const [editApptOpen, setEditApptOpen] = useState(false);
+  const [selectedAppt, setSelectedAppt] = useState<AppointmentDetail | null>(null);
   const navigate = useNavigate();
 
   const loadData = useCallback(async (pid: string) => {
