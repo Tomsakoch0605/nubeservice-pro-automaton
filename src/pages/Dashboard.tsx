@@ -228,16 +228,27 @@ const Dashboard = () => {
                   return (
                     <div
                       key={b.id}
-                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/80 cursor-pointer transition-colors"
-                      onClick={() => { setSelectedAppt(b); setEditApptOpen(true); }}
+                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted/80 transition-colors"
                     >
-                      <div>
+                      <div className="cursor-pointer flex-1" onClick={() => { setSelectedAppt(b); setEditApptOpen(true); }}>
                         <p className="font-medium text-foreground text-sm">{b.clientName}</p>
                         <p className="text-xs text-muted-foreground">{b.serviceName} — {b.time}</p>
                       </div>
                       <div className="flex items-center gap-2">
+                        {b.clientPhone && (
+                          <a
+                            href={`https://wa.me/${b.clientPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`¡Hola ${b.clientName}! 👋 Te recordamos tu cita de ${b.serviceName} hoy a las ${b.time}. ¡Te esperamos!`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="p-1.5 rounded-full hover:bg-primary/10 transition-colors"
+                            title="Enviar recordatorio por WhatsApp"
+                          >
+                            <MessageCircle className="w-4 h-4 text-primary" />
+                          </a>
+                        )}
                         <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${st.className}`}>{st.label}</span>
-                        <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                        <Pencil className="w-3.5 h-3.5 text-muted-foreground cursor-pointer" onClick={() => { setSelectedAppt(b); setEditApptOpen(true); }} />
                       </div>
                     </div>
                   );
