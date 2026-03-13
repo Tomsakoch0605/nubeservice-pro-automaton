@@ -126,7 +126,7 @@ Ingresos del mes: $${revenue}`;
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos agotados. Recargá tu workspace." }), {
+        return new Response(JSON.stringify({ error: "Créditos agotados. Recarga tu workspace." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
