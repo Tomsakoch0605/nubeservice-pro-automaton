@@ -1,4 +1,4 @@
-import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus, Pencil } from "lucide-react";
+import { Calendar, Users, DollarSign, Clock, CheckCircle2, BarChart3, Loader2, ArrowRight, Plus, Pencil, CalendarDays } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/landing/Navbar";
 import AiAssistant from "@/components/dashboard/AiAssistant";
