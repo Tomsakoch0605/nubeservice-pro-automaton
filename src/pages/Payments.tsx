@@ -388,7 +388,7 @@ const Payments = () => {
                 <SelectContent>
                   {appointments.map((a) => (
                     <SelectItem key={a.id} value={a.id}>
-                      {a.client_name} — {a.service_name} ({new Date(a.starts_at).toLocaleDateString("es-AR")})
+                      {a.client_name} — {a.service_name} ({new Date(a.starts_at).toLocaleDateString("es-MX")})
                     </SelectItem>
                   ))}
                 </SelectContent>

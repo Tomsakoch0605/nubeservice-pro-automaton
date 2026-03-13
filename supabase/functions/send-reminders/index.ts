@@ -56,10 +56,10 @@ Deno.serve(async (req) => {
       for (const appt of profileAppts) {
         const clientName = (appt.clients as any)?.full_name || "Cliente";
         const serviceName = (appt.services as any)?.name || "Servicio";
-        const time = new Date(appt.starts_at).toLocaleTimeString("es-AR", {
+        const time = new Date(appt.starts_at).toLocaleTimeString("es-MX", {
           hour: "2-digit",
           minute: "2-digit",
-          timeZone: "America/Argentina/Buenos_Aires",
+          timeZone: "America/Mexico_City",
         });
 
         const { error: notifError } = await supabase.from("notifications").insert({

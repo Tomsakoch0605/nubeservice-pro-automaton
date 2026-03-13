@@ -165,7 +165,7 @@ const Services = () => {
                       <TableCell className="hidden sm:table-cell text-muted-foreground max-w-[200px] truncate">
                         {s.description || "—"}
                       </TableCell>
-                      <TableCell>${Number(s.price).toLocaleString("es-AR")}</TableCell>
+                      <TableCell>${Number(s.price).toLocaleString("es-MX")}</TableCell>
                       <TableCell>{s.duration_minutes} min</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
