@@ -273,6 +273,9 @@ const Payments = () => {
           ))}
         </div>
 
+        {/* Monthly Revenue Chart */}
+        <MonthlyRevenueChart payments={payments} />
+
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="relative flex-1 max-w-md">
