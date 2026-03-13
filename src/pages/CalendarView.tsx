@@ -73,7 +73,7 @@ const CalendarView = () => {
   const fetchAppointments = useCallback(async (pid: string, start: Date, end: Date) => {
     const { data, error } = await supabase
       .from("appointments")
-      .select("id, starts_at, ends_at, status, notes, clients(full_name), services(name)")
+      .select("id, starts_at, ends_at, status, notes, clients(full_name, phone), services(name)")
       .eq("profile_id", pid)
       .gte("starts_at", start.toISOString())
       .lte("starts_at", end.toISOString())
@@ -87,6 +87,7 @@ const CalendarView = () => {
       status: a.status,
       notes: a.notes,
       clientName: a.clients?.full_name || "Sin cliente",
+      clientPhone: a.clients?.phone || null,
       serviceName: a.services?.name || "Sin servicio",
     })));
   }, []);
