@@ -266,7 +266,7 @@ const Booking = () => {
       setSuccess(true);
     } catch (err: any) {
       console.error(err);
-      toast.error("Error al crear la reserva. Intentá de nuevo.");
+      toast.error("Error al crear la reserva. Inténtalo de nuevo.");
     } finally {
       setSaving(false);
     }
