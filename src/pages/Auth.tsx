@@ -27,13 +27,20 @@ const Auth = () => {
         toast.success("¡Bienvenido de vuelta!");
         navigate("/dashboard");
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: { data: { full_name: name } },
         });
         if (error) throw error;
-        toast.success("¡Cuenta creada! Revisá tu email para confirmar.");
+        
+        // If auto-confirm is enabled, we get a session immediately
+        if (data.session) {
+          toast.success("¡Cuenta creada! Bienvenido/a.");
+          navigate("/dashboard");
+        } else {
+          toast.success("¡Cuenta creada! Revisá tu email para confirmar.");
+        }
       }
     } catch (error: any) {
       toast.error(error.message || "Ocurrió un error");
