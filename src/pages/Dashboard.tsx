@@ -91,6 +91,7 @@ const Dashboard = () => {
       serviceName: a.services?.name || "Sin servicio",
       time: new Date(a.starts_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }),
       status: a.status,
+      notes: a.notes,
     })));
 
     const serviceCounts: Record<string, number> = {};
