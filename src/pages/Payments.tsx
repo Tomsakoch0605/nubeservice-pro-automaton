@@ -383,7 +383,7 @@ const Payments = () => {
               <Label>Cita *</Label>
               <Select value={selectedAppt} onValueChange={handleSelectAppt}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccioná una cita" />
+                  <SelectValue placeholder="Selecciona una cita" />
                 </SelectTrigger>
                 <SelectContent>
                   {appointments.map((a) => (
