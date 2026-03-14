@@ -70,6 +70,18 @@ const SettingsSection = ({ profileId }: Props) => {
     }));
   };
 
+  const validateRFC = (rfc: string): boolean => {
+    if (!rfc.trim()) return true; // Opcional
+    const cleaned = rfc.trim().toUpperCase();
+    
+    // Persona moral: 12 caracteres (3 letras + 6 dígitos + 3 alfanuméricos)
+    const moralPattern = /^[A-Z&Ñ]{3}\d{6}[A-Z0-9]{3}$/;
+    // Persona física: 13 caracteres (4 letras + 6 dígitos + 3 alfanuméricos)
+    const fisicaPattern = /^[A-Z&Ñ]{4}\d{6}[A-Z0-9]{3}$/;
+    
+    return moralPattern.test(cleaned) || fisicaPattern.test(cleaned);
+  };
+
   const handleSave = async () => {
     if (!data.businessName.trim()) {
       toast.error("El nombre del negocio es obligatorio");
@@ -77,6 +89,11 @@ const SettingsSection = ({ profileId }: Props) => {
     }
     if (!data.slug.trim()) {
       toast.error("El slug es obligatorio para las reservas públicas");
+      return;
+    }
+
+    if (!validateRFC(data.rfc)) {
+      toast.error("El RFC no tiene un formato válido (12 caracteres para persona moral o 13 para persona física)");
       return;
     }
 
