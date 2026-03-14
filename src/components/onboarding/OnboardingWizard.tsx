@@ -253,7 +253,7 @@ const OnboardingWizard = () => {
               {currentStepKey === "credentials" && (
                 <div className="space-y-5">
                   <div>
-                    <Label>Cédula Profesional <span className="text-destructive">*</span></Label>
+                    <Label>Cédula Profesional <span className="text-xs text-muted-foreground">(opcional)</span></Label>
                     <Input
                       placeholder="Ej: 12345678"
                       value={data.cedulaProfesional}
