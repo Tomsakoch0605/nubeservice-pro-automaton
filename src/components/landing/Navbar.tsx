@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, Menu, X, ArrowLeft, LayoutDashboard, LogOut, User } from "lucide-react";
+import { Menu, X, ArrowLeft, LayoutDashboard, LogOut, User, Briefcase } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,8 +8,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger } from
+"@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -55,20 +55,20 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         {/* Left: Logo + Back */}
         <div className="flex items-center gap-2">
-          {showBackButton && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => navigate(-1)}
-              aria-label="Volver"
-            >
+          {showBackButton &&
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => navigate(-1)}
+            aria-label="Volver">
+            
               <ArrowLeft className="w-4 h-4" />
             </Button>
-          )}
+          }
           <Link to={session ? "/dashboard" : "/"} className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-primary-foreground" />
+              <Briefcase className="w-5 h-5 text-primary-foreground" />
             </div>
             <span className="font-display font-bold text-xl text-foreground">
               Nube<span className="text-primary">Service</span>
@@ -77,17 +77,17 @@ const Navbar = () => {
         </div>
 
         {/* Center: Landing links (only on landing) */}
-        {isLanding && (
-          <div className="hidden md:flex items-center gap-8">
+        {isLanding &&
+        <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">Funcionalidades</a>
             <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">Cómo Funciona</a>
             <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">Precios</a>
           </div>
-        )}
+        }
 
         {/* Center: Inner page nav links (when logged in and not on landing) */}
-        {session && isInnerPage && (
-          <div className="hidden md:flex items-center gap-6">
+        {session && isInnerPage &&
+        <div className="hidden md:flex items-center gap-6">
             <Link to="/dashboard" className={`text-sm font-medium transition-colors ${isDashboard ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
               Dashboard
             </Link>
@@ -104,12 +104,12 @@ const Navbar = () => {
               Pagos
             </Link>
           </div>
-        )}
+        }
 
         {/* Right: Auth actions */}
         <div className="hidden md:flex items-center gap-3">
-          {session ? (
-            <DropdownMenu>
+          {session ?
+          <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2">
                   <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
@@ -129,9 +129,9 @@ const Navbar = () => {
                   Cerrar Sesión
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <>
+            </DropdownMenu> :
+
+          <>
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/auth">Iniciar Sesión</Link>
               </Button>
@@ -139,7 +139,7 @@ const Navbar = () => {
                 <Link to="/auth">Comenzar Gratis</Link>
               </Button>
             </>
-          )}
+          }
         </div>
 
         {/* Mobile hamburger */}
@@ -149,17 +149,17 @@ const Navbar = () => {
       </div>
 
       {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3">
-          {isLanding && !session && (
-            <>
+      {open &&
+      <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3">
+          {isLanding && !session &&
+        <>
               <a href="#features" className="block text-muted-foreground hover:text-foreground text-sm">Funcionalidades</a>
               <a href="#how-it-works" className="block text-muted-foreground hover:text-foreground text-sm">Cómo Funciona</a>
               <a href="#pricing" className="block text-muted-foreground hover:text-foreground text-sm">Precios</a>
             </>
-          )}
-          {session && (
-            <>
+        }
+          {session &&
+        <>
               <Link to="/dashboard" className="block text-sm text-muted-foreground hover:text-foreground" onClick={() => setOpen(false)}>Dashboard</Link>
               <Link to="/clients" className="block text-sm text-muted-foreground hover:text-foreground" onClick={() => setOpen(false)}>Clientes</Link>
               <Link to="/calendar" className="block text-sm text-muted-foreground hover:text-foreground" onClick={() => setOpen(false)}>Calendario</Link>
@@ -169,16 +169,16 @@ const Navbar = () => {
                 <LogOut className="w-4 h-4" /> Cerrar Sesión
               </Button>
             </>
-          )}
-          {!session && (
-            <Button variant="hero" size="lg" className="w-full" asChild>
+        }
+          {!session &&
+        <Button variant="hero" size="lg" className="w-full" asChild>
               <Link to="/auth">Comenzar Gratis</Link>
             </Button>
-          )}
+        }
         </div>
-      )}
-    </nav>
-  );
+      }
+    </nav>);
+
 };
 
 export default Navbar;
