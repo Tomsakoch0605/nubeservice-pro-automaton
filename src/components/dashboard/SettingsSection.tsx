@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Settings, Save, Loader2, Copy } from "lucide-react";
+import { Settings, Save, Loader2, Copy, ShieldCheck, AlertTriangle, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -17,6 +17,8 @@ type SettingsData = {
   workDays: string[];
   startTime: string;
   endTime: string;
+  cedulaProfesional: string;
+  rfc: string;
 };
 
 type Props = {
@@ -27,6 +29,7 @@ const SettingsSection = ({ profileId }: Props) => {
   const [data, setData] = useState<SettingsData>({
     businessName: "", slug: "", ownerName: "", phone: "", location: "",
     workDays: [], startTime: "09:00", endTime: "18:00",
+    cedulaProfesional: "", rfc: "",
   });
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -35,7 +38,7 @@ const SettingsSection = ({ profileId }: Props) => {
     const load = async () => {
       const { data: p } = await supabase
         .from("profiles")
-        .select("business_name, slug, owner_name, phone, location, work_days, start_time, end_time")
+        .select("business_name, slug, owner_name, phone, location, work_days, start_time, end_time, cedula_profesional, rfc")
         .eq("id", profileId)
         .maybeSingle();
       if (p) {
@@ -48,6 +51,8 @@ const SettingsSection = ({ profileId }: Props) => {
           workDays: (p.work_days as string[]) || [],
           startTime: p.start_time?.slice(0, 5) || "09:00",
           endTime: p.end_time?.slice(0, 5) || "18:00",
+          cedulaProfesional: (p as any).cedula_profesional || "",
+          rfc: (p as any).rfc || "",
         });
       }
       setLoaded(true);
@@ -112,7 +117,9 @@ const SettingsSection = ({ profileId }: Props) => {
           work_days: data.workDays,
           start_time: data.startTime,
           end_time: data.endTime,
-        })
+          cedula_profesional: data.cedulaProfesional.trim() || null,
+          rfc: data.rfc.trim().toUpperCase() || null,
+        } as any)
         .eq("id", profileId);
 
       if (error) throw error;
@@ -205,6 +212,44 @@ const SettingsSection = ({ profileId }: Props) => {
           <div>
             <Label>Hora Fin</Label>
             <Input type="time" value={data.endTime} onChange={e => setData(p => ({ ...p, endTime: e.target.value }))} />
+          </div>
+        </div>
+
+        {/* Datos Profesionales */}
+        <div className="border-t border-border pt-4 mt-4">
+          <h4 className="font-display font-semibold text-sm mb-3 text-foreground flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-primary" /> Datos Profesionales
+          </h4>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <Label>Cédula Profesional <span className="text-xs text-muted-foreground">(opcional)</span></Label>
+              <Input
+                value={data.cedulaProfesional}
+                onChange={e => setData(p => ({ ...p, cedulaProfesional: e.target.value }))}
+                placeholder="Ej: 12345678"
+                maxLength={20}
+              />
+            </div>
+            <div>
+              <Label>RFC <span className="text-xs text-muted-foreground">(opcional)</span></Label>
+              <Input
+                value={data.rfc}
+                onChange={e => setData(p => ({ ...p, rfc: e.target.value.toUpperCase() }))}
+                placeholder="Ej: XAXX010101000"
+                maxLength={13}
+              />
+              {!data.rfc.trim() && (
+                <div className="flex items-start gap-1.5 mt-2">
+                  <AlertTriangle className="w-3.5 h-3.5 text-destructive shrink-0 mt-0.5" />
+                  <p className="text-xs text-destructive">Sin RFC no podrás emitir facturas.</p>
+                </div>
+              )}
+              {data.rfc.trim() && (
+                <p className="text-xs text-primary mt-1 flex items-center gap-1">
+                  <Check className="w-3 h-3" /> Podrás emitir facturas.
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
