@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://nubeservice-pro-automaton.lovable.app/sitemap.xml
