@@ -69,7 +69,7 @@ const StepIndicator = ({ current, total }: { current: number; total: number }) =
 
 const allSteps = [
   { key: "business", icon: Calendar, title: "Tu Negocio", sub: "Cuéntanos sobre tu actividad" },
-  { key: "credentials", icon: ShieldCheck, title: "Datos Profesionales", sub: "Cédula profesional y datos fiscales" },
+  { key: "credentials", icon: ShieldCheck, title: "Datos Profesionales", sub: "Cédula profesional y datos fiscales (opcional)" },
   { key: "schedule", icon: Clock, title: "Agenda y Horarios", sub: "Configura tu disponibilidad" },
   { key: "payments", icon: CreditCard, title: "Pagos", sub: "Elige cómo cobrar" },
 ];
@@ -80,13 +80,7 @@ const OnboardingWizard = () => {
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
 
-  const isProfessional = professionalServiceTypes.includes(data.serviceType);
-
-  const steps = useMemo(
-    () => (isProfessional ? allSteps : allSteps.filter((s) => s.key !== "credentials")),
-    [isProfessional]
-  );
-
+  const steps = allSteps;
   const totalSteps = steps.length;
 
   useEffect(() => {
