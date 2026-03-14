@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Settings, Save, Loader2, Copy, ShieldCheck, AlertTriangle, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import CedulaVerification from "@/components/shared/CedulaVerification";
 
 const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
