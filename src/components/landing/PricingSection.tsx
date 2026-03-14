@@ -19,7 +19,7 @@ const plans = [
   },
   {
     name: "Profesional",
-    price: "4.990",
+    price: "399",
     desc: "Para profesionales que quieren crecer sin límites.",
     features: [
       "Citas ilimitadas",
