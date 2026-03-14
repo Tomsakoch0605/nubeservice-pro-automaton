@@ -235,6 +235,7 @@ const SettingsSection = ({ profileId }: Props) => {
                   <CedulaVerification cedula={data.cedulaProfesional} />
                 </div>
               )}
+            </div>
             <div>
               <Label>RFC <span className="text-xs text-muted-foreground">(opcional)</span></Label>
               <Input
