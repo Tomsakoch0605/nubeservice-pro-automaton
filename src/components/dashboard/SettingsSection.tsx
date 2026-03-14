@@ -6,6 +6,7 @@ import { Settings, Save, Loader2, Copy, ShieldCheck, AlertTriangle, Check } from
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import CedulaVerification from "@/components/shared/CedulaVerification";
+import GoogleCalendarSection from "@/components/dashboard/GoogleCalendarSection";
 
 const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
@@ -280,6 +281,9 @@ const SettingsSection = ({ profileId }: Props) => {
             </div>
           </div>
         </div>
+
+        {/* Google Calendar Integration */}
+        <GoogleCalendarSection profileId={profileId} />
 
         <div className="pt-2">
           <Button onClick={handleSave} disabled={saving} className="gap-2">
