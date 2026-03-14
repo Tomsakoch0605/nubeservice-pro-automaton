@@ -267,9 +267,14 @@ const SettingsSection = ({ profileId }: Props) => {
                   <p className="text-xs text-destructive">Sin RFC no podrás emitir facturas.</p>
                 </div>
               )}
-              {data.rfc.trim() && (
+              {data.rfc.trim() && validateRFC(data.rfc) && (
                 <p className="text-xs text-primary mt-1 flex items-center gap-1">
-                  <Check className="w-3 h-3" /> Podrás emitir facturas.
+                  <Check className="w-3 h-3" /> RFC válido - Podrás emitir facturas.
+                </p>
+              )}
+              {data.rfc.trim() && !validateRFC(data.rfc) && (
+                <p className="text-xs text-destructive mt-1 flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" /> Formato inválido (12 o 13 caracteres)
                 </p>
               )}
             </div>
