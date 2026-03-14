@@ -117,7 +117,9 @@ const SettingsSection = ({ profileId }: Props) => {
           work_days: data.workDays,
           start_time: data.startTime,
           end_time: data.endTime,
-        })
+          cedula_profesional: data.cedulaProfesional.trim() || null,
+          rfc: data.rfc.trim().toUpperCase() || null,
+        } as any)
         .eq("id", profileId);
 
       if (error) throw error;
