@@ -17,6 +17,8 @@ type SettingsData = {
   workDays: string[];
   startTime: string;
   endTime: string;
+  cedulaProfesional: string;
+  rfc: string;
 };
 
 type Props = {
