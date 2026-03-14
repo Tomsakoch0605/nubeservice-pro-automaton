@@ -230,7 +230,11 @@ const SettingsSection = ({ profileId }: Props) => {
                 placeholder="Ej: 12345678"
                 maxLength={20}
               />
-            </div>
+              {data.cedulaProfesional.trim() && (
+                <div className="mt-2">
+                  <CedulaVerification cedula={data.cedulaProfesional} />
+                </div>
+              )}
             <div>
               <Label>RFC <span className="text-xs text-muted-foreground">(opcional)</span></Label>
               <Input

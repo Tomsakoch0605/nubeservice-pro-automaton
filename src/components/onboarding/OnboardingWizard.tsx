@@ -339,6 +339,11 @@ const OnboardingWizard = () => {
                     <p className="text-xs text-muted-foreground mt-1">
                       Si la agregas, será visible en tu perfil público para dar confianza a tus clientes.
                     </p>
+                    {data.cedulaProfesional.trim() && (
+                      <div className="mt-2">
+                        <CedulaVerification cedula={data.cedulaProfesional} />
+                      </div>
+                    )}
                   </div>
 
                   <div className="border-t border-border pt-5">
