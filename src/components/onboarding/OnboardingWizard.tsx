@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowRight, Check, Calendar, Clock, CreditCard, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Calendar, Clock, CreditCard, Loader2, ShieldCheck, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -23,11 +23,17 @@ type FormData = {
   paymentMethods: string[];
   requiresDeposit: boolean;
   depositPercent: string;
+  cedulaProfesional: string;
+  rfc: string;
 };
 
 const serviceTypes = [
   "Peluquería / Barbería", "Estética / Spa", "Odontología", "Psicología",
   "Nutrición", "Personal Trainer", "Consultoría", "Clases Particulares", "Otro",
+];
+
+const professionalServiceTypes = [
+  "Odontología", "Psicología", "Nutrición", "Consultoría",
 ];
 
 const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
@@ -39,6 +45,7 @@ const initial: FormData = {
   location: "", workDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
   startTime: "09:00", endTime: "18:00",
   paymentMethods: [], requiresDeposit: false, depositPercent: "30",
+  cedulaProfesional: "", rfc: "",
 };
 
 const StepIndicator = ({ current, total }: { current: number; total: number }) => (
@@ -53,17 +60,18 @@ const StepIndicator = ({ current, total }: { current: number; total: number }) =
           {i < current ? <Check className="w-5 h-5" /> : i + 1}
         </div>
         {i < total - 1 && (
-          <div className={`hidden sm:block w-16 h-0.5 transition-colors ${i < current ? "bg-primary" : "bg-border"}`} />
+          <div className={`hidden sm:block w-12 h-0.5 transition-colors ${i < current ? "bg-primary" : "bg-border"}`} />
         )}
       </div>
     ))}
   </div>
 );
 
-const stepTitles = [
-  { icon: Calendar, title: "Tu Negocio", sub: "Cuéntanos sobre tu actividad" },
-  { icon: Clock, title: "Agenda y Horarios", sub: "Configura tu disponibilidad" },
-  { icon: CreditCard, title: "Pagos", sub: "Elige cómo cobrar" },
+const allSteps = [
+  { key: "business", icon: Calendar, title: "Tu Negocio", sub: "Cuéntanos sobre tu actividad" },
+  { key: "credentials", icon: ShieldCheck, title: "Datos Profesionales", sub: "Cédula profesional y datos fiscales" },
+  { key: "schedule", icon: Clock, title: "Agenda y Horarios", sub: "Configura tu disponibilidad" },
+  { key: "payments", icon: CreditCard, title: "Pagos", sub: "Elige cómo cobrar" },
 ];
 
 const OnboardingWizard = () => {
@@ -71,6 +79,15 @@ const OnboardingWizard = () => {
   const [data, setData] = useState<FormData>(initial);
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
+
+  const isProfessional = professionalServiceTypes.includes(data.serviceType);
+
+  const steps = useMemo(
+    () => (isProfessional ? allSteps : allSteps.filter((s) => s.key !== "credentials")),
+    [isProfessional]
+  );
+
+  const totalSteps = steps.length;
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -83,6 +100,13 @@ const OnboardingWizard = () => {
     checkAuth();
   }, [navigate]);
 
+  // If user un-selects a professional type while on the credentials step, go back
+  useEffect(() => {
+    if (!isProfessional && step >= totalSteps) {
+      setStep(totalSteps - 1);
+    }
+  }, [isProfessional, step, totalSteps]);
+
   const update = (field: keyof FormData, value: any) => setData((p) => ({ ...p, [field]: value }));
 
   const toggleArray = (field: "workDays" | "paymentMethods", val: string) => {
@@ -92,8 +116,17 @@ const OnboardingWizard = () => {
     }));
   };
 
-  const next = () => step < 2 && setStep(step + 1);
+  const next = () => step < totalSteps - 1 && setStep(step + 1);
   const prev = () => step > 0 && setStep(step - 1);
+
+  const currentStepKey = steps[step]?.key;
+
+  const canAdvance = () => {
+    if (currentStepKey === "credentials") {
+      return data.cedulaProfesional.trim().length > 0;
+    }
+    return true;
+  };
 
   const finish = async () => {
     setSaving(true);
@@ -128,23 +161,30 @@ const OnboardingWizard = () => {
         slug = `${slug}-${Date.now().toString(36)}`;
       }
 
+      const updatePayload: Record<string, any> = {
+        business_name: data.businessName,
+        owner_name: data.ownerName,
+        phone: data.phone,
+        service_type: serviceLabel,
+        location: data.location,
+        work_days: data.workDays,
+        start_time: data.startTime,
+        end_time: data.endTime,
+        payment_methods: data.paymentMethods,
+        requires_deposit: data.requiresDeposit,
+        deposit_percent: data.requiresDeposit ? parseInt(data.depositPercent) : null,
+        onboarding_completed: true,
+        slug,
+      };
+
+      if (isProfessional) {
+        updatePayload.cedula_profesional = data.cedulaProfesional.trim() || null;
+        updatePayload.rfc = data.rfc.trim() || null;
+      }
+
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({
-          business_name: data.businessName,
-          owner_name: data.ownerName,
-          phone: data.phone,
-          service_type: serviceLabel,
-          location: data.location,
-          work_days: data.workDays,
-          start_time: data.startTime,
-          end_time: data.endTime,
-          payment_methods: data.paymentMethods,
-          requires_deposit: data.requiresDeposit,
-          deposit_percent: data.requiresDeposit ? parseInt(data.depositPercent) : null,
-          onboarding_completed: true,
-          slug,
-        })
+        .update(updatePayload)
         .eq("id", profile.id);
 
       if (profileError) throw profileError;
@@ -172,7 +212,7 @@ const OnboardingWizard = () => {
     }
   };
 
-  const Icon = stepTitles[step].icon;
+  const Icon = steps[step].icon;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "var(--gradient-warm)" }}>
@@ -181,7 +221,7 @@ const OnboardingWizard = () => {
           <span className="font-display text-2xl font-bold text-foreground">Nube<span className="text-primary">Service</span></span>
         </div>
 
-        <StepIndicator current={step} total={3} />
+        <StepIndicator current={step} total={totalSteps} />
 
         <div className="glass-card p-8">
           <div className="flex items-center gap-3 mb-6">
@@ -189,20 +229,20 @@ const OnboardingWizard = () => {
               <Icon className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h2 className="font-display font-bold text-xl text-foreground">{stepTitles[step].title}</h2>
-              <p className="text-sm text-muted-foreground">{stepTitles[step].sub}</p>
+              <h2 className="font-display font-bold text-xl text-foreground">{steps[step].title}</h2>
+              <p className="text-sm text-muted-foreground">{steps[step].sub}</p>
             </div>
           </div>
 
           <AnimatePresence mode="wait">
             <motion.div
-              key={step}
+              key={currentStepKey}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              {step === 0 && (
+              {currentStepKey === "business" && (
                 <div className="space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div><Label>Nombre del Negocio</Label><Input placeholder="Ej: Estética María" value={data.businessName} onChange={(e) => update("businessName", e.target.value)} /></div>
@@ -229,7 +269,47 @@ const OnboardingWizard = () => {
                 </div>
               )}
 
-              {step === 1 && (
+              {currentStepKey === "credentials" && (
+                <div className="space-y-5">
+                  <div>
+                    <Label>Cédula Profesional <span className="text-destructive">*</span></Label>
+                    <Input
+                      placeholder="Ej: 12345678"
+                      value={data.cedulaProfesional}
+                      onChange={(e) => update("cedulaProfesional", e.target.value)}
+                      maxLength={20}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Requerida para profesionales titulados. Será visible en tu perfil público.
+                    </p>
+                  </div>
+
+                  <div className="border-t border-border pt-5">
+                    <Label>RFC (Registro Federal de Contribuyentes)</Label>
+                    <Input
+                      placeholder="Ej: XAXX010101000"
+                      value={data.rfc}
+                      onChange={(e) => update("rfc", e.target.value.toUpperCase())}
+                      maxLength={13}
+                    />
+                    {!data.rfc.trim() && (
+                      <div className="flex items-start gap-2 mt-3 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                        <AlertTriangle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+                        <p className="text-xs text-destructive">
+                          Si no agregas tu RFC no podrás emitir facturas a tus clientes. Podrás agregarlo después en la configuración de tu negocio.
+                        </p>
+                      </div>
+                    )}
+                    {data.rfc.trim() && (
+                      <p className="text-xs text-primary mt-1 flex items-center gap-1">
+                        <Check className="w-3 h-3" /> Podrás emitir facturas a tus clientes.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {currentStepKey === "schedule" && (
                 <div className="space-y-5">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div><Label>Duración del Turno (min)</Label><Input type="number" value={data.serviceDuration} onChange={(e) => update("serviceDuration", e.target.value)} /></div>
@@ -253,7 +333,7 @@ const OnboardingWizard = () => {
                 </div>
               )}
 
-              {step === 2 && (
+              {currentStepKey === "payments" && (
                 <div className="space-y-5">
                   <div>
                     <Label>Métodos de Pago Aceptados</Label>
@@ -290,8 +370,8 @@ const OnboardingWizard = () => {
             <Button variant="ghost" onClick={prev} disabled={step === 0}>
               <ArrowLeft className="w-4 h-4 mr-1" /> Anterior
             </Button>
-            {step < 2 ? (
-              <Button variant="hero" onClick={next}>
+            {step < totalSteps - 1 ? (
+              <Button variant="hero" onClick={next} disabled={!canAdvance()}>
                 Siguiente <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             ) : (
