@@ -4,30 +4,30 @@ import { Star } from "lucide-react";
 const testimonials = [
   {
     name: "Lucía Méndez",
-    role: "Estilista · Buenos Aires",
+    role: "Estilista · CDMX",
     quote:
-      "Desde que uso NubeService dejé de perder turnos por WhatsApp. Mis clientes reservan solos y yo me enfoco en lo que amo hacer.",
+      "Desde que uso NubeService dejé de perder citas por WhatsApp. Mis clientes reservan solos y yo me enfoco en lo que amo hacer.",
     stars: 5,
   },
   {
     name: "Martín Ríos",
-    role: "Kinesiólogo · Córdoba",
+    role: "Fisioterapeuta · Guadalajara",
     quote:
       "El recordatorio automático redujo mis no-shows un 70%. Es como tener una secretaria que nunca descansa.",
     stars: 5,
   },
   {
     name: "Camila Torres",
-    role: "Nutricionista · Rosario",
+    role: "Nutrióloga · Monterrey",
     quote:
       "Cobrar anticipos cambió todo. Ahora mis pacientes confirman de verdad y yo tengo previsibilidad de ingresos.",
     stars: 5,
   },
   {
     name: "Diego Herrera",
-    role: "Barbero · Mendoza",
+    role: "Barbero · Puebla",
     quote:
-      "En 3 meses dupliqué mis turnos. El dashboard me muestra exactamente qué servicios rinden más.",
+      "En 3 meses dupliqué mis citas. El dashboard me muestra exactamente qué servicios rinden más.",
     stars: 5,
   },
 ];
