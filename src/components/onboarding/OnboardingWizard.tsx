@@ -130,9 +130,24 @@ const OnboardingWizard = () => {
 
   const currentStepKey = steps[step]?.key;
 
+  const validateRFC = (rfc: string): boolean => {
+    if (!rfc.trim()) return true; // Opcional
+    const cleaned = rfc.trim().toUpperCase();
+    
+    // Persona moral: 12 caracteres (3 letras + 6 dígitos + 3 alfanuméricos)
+    const moralPattern = /^[A-Z&Ñ]{3}\d{6}[A-Z0-9]{3}$/;
+    // Persona física: 13 caracteres (4 letras + 6 dígitos + 3 alfanuméricos)
+    const fisicaPattern = /^[A-Z&Ñ]{4}\d{6}[A-Z0-9]{3}$/;
+    
+    return moralPattern.test(cleaned) || fisicaPattern.test(cleaned);
+  };
+
   const canAdvance = () => {
     if (currentStepKey === "welcome") {
       return data.serviceType !== "" && (data.serviceType !== "Otro" || data.customService.trim() !== "");
+    }
+    if (currentStepKey === "credentials") {
+      return validateRFC(data.rfc);
     }
     return true;
   };
