@@ -38,7 +38,7 @@ const SettingsSection = ({ profileId }: Props) => {
     const load = async () => {
       const { data: p } = await supabase
         .from("profiles")
-        .select("business_name, slug, owner_name, phone, location, work_days, start_time, end_time")
+        .select("business_name, slug, owner_name, phone, location, work_days, start_time, end_time, cedula_profesional, rfc")
         .eq("id", profileId)
         .maybeSingle();
       if (p) {
@@ -51,6 +51,8 @@ const SettingsSection = ({ profileId }: Props) => {
           workDays: (p.work_days as string[]) || [],
           startTime: p.start_time?.slice(0, 5) || "09:00",
           endTime: p.end_time?.slice(0, 5) || "18:00",
+          cedulaProfesional: (p as any).cedula_profesional || "",
+          rfc: (p as any).rfc || "",
         });
       }
       setLoaded(true);
