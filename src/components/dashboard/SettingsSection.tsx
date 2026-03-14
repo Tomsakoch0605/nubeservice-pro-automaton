@@ -282,6 +282,9 @@ const SettingsSection = ({ profileId }: Props) => {
           </div>
         </div>
 
+        {/* Google Calendar Integration */}
+        <GoogleCalendarSection profileId={profileId} />
+
         <div className="pt-2">
           <Button onClick={handleSave} disabled={saving} className="gap-2">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
