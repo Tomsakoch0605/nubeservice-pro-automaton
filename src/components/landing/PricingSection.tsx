@@ -35,7 +35,7 @@ const plans = [
   },
   {
     name: "Equipo",
-    price: "9.990",
+    price: "999",
     desc: "Para equipos y estudios con múltiples profesionales.",
     features: [
       "Todo del plan Profesional",
