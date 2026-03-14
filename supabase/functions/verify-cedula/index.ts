@@ -3,6 +3,20 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+function fallbackResponse(cleanCedula: string, customMessage?: string) {
+  return new Response(
+    JSON.stringify({
+      success: true,
+      verified: null,
+      fallback: true,
+      cedula: cleanCedula,
+      message: customMessage || 'No se pudo verificar automáticamente. Puedes verificar manualmente en el portal de la SEP.',
+      verificationUrl: 'https://cedulaprofesional.sep.gob.mx/',
+    }),
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  );
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -67,57 +81,38 @@ Deno.serve(async (req) => {
     for (const result of results) {
       const text = `${result.title || ''} ${result.description || ''} ${result.markdown || ''}`;
       
-      // Check if the exact cédula number appears in the result
       if (text.includes(cleanCedula)) {
         found = true;
 
-        // Try to extract professional info
-        const namePatterns = [
-          /nombre[:\s]*([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ\s]+)/i,
-          /(?:Dr\.|Lic\.|Ing\.|Mtro\.|Mtra\.)\s+([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ\s]+)/i,
-        ];
-        const profPatterns = [
-          /(?:profesión|carrera|título|licenciatura|ingeniería|maestría|doctorado)[:\s]*([^\n,;|]+)/i,
-        ];
-        const instPatterns = [
-          /(?:institución|universidad|escuela|instituto)[:\s]*([^\n,;|]+)/i,
-        ];
+        const nameMatch = text.match(/nombre[:\s]*([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ\s]+)/i);
+        const profMatch = text.match(/(?:profesión|carrera|título|licenciatura|ingeniería|maestría|doctorado)[:\s]*([^\n,;|]+)/i);
+        const instMatch = text.match(/(?:institución|universidad|escuela|instituto)[:\s]*([^\n,;|]+)/i);
 
-        for (const pattern of namePatterns) {
-          const match = text.match(pattern);
-          if (match && !holderName) holderName = match[1].trim();
-        }
-        for (const pattern of profPatterns) {
-          const match = text.match(pattern);
-          if (match && !profession) profession = match[1].trim();
-        }
-        for (const pattern of instPatterns) {
-          const match = text.match(pattern);
-          if (match && !institution) institution = match[1].trim();
-        }
+        if (nameMatch) holderName = nameMatch[1].trim();
+        if (profMatch) profession = profMatch[1].trim();
+        if (instMatch) institution = instMatch[1].trim();
         break;
       }
     }
 
     if (found) {
-      const result: Record<string, unknown> = {
+      const resultData: Record<string, unknown> = {
         success: true,
         verified: true,
         cedula: cleanCedula,
         message: 'Se encontraron registros públicos de esta cédula profesional.',
         verificationUrl: 'https://cedulaprofesional.sep.gob.mx/',
       };
-      if (holderName) result.holderName = holderName;
-      if (profession) result.profession = profession;
-      if (institution) result.institution = institution;
+      if (holderName) resultData.holderName = holderName;
+      if (profession) resultData.profession = profession;
+      if (institution) resultData.institution = institution;
 
       return new Response(
-        JSON.stringify(result),
+        JSON.stringify(resultData),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Not found in search results — doesn't mean invalid, just not indexed
     return new Response(
       JSON.stringify({
         success: true,
@@ -134,24 +129,3 @@ Deno.serve(async (req) => {
     return fallbackResponse('');
   }
 });
-
-function fallbackResponse(cleanCedula: string, customMessage?: string) {
-  return new Response(
-    JSON.stringify({
-      success: true,
-      verified: null,
-      fallback: true,
-      cedula: cleanCedula,
-      message: customMessage || 'No se pudo verificar automáticamente. Puedes verificar manualmente en el portal de la SEP.',
-      verificationUrl: 'https://cedulaprofesional.sep.gob.mx/',
-    }),
-    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-  );
-}
-
-// Need corsHeaders in scope for fallbackResponse
-const corsHeadersFallback = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-  'Content-Type': 'application/json',
-};
