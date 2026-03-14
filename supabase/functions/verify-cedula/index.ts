@@ -38,95 +38,88 @@ Deno.serve(async (req) => {
 
     console.log('Verifying cédula:', cleanCedula);
 
-    // Try scraping the SEP verification page with the cédula number
-    const sepUrl = `https://cedulaprofesional.sep.gob.mx/cedula/presidencia/indexAvanzada.action`;
+    // Use Firecrawl search to find SEP records for this cédula
+    const searchQuery = `cédula profesional ${cleanCedula} site:cedulaprofesional.sep.gob.mx`;
 
-    const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
+    const response = await fetch('https://api.firecrawl.dev/v1/search', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        url: sepUrl,
-        formats: ['markdown', 'html'],
-        onlyMainContent: true,
-        waitFor: 3000,
-        actions: [
-          { type: 'wait', milliseconds: 1000 },
-          { type: 'click', selector: 'input[name="cedula"], #idCedula, input[type="text"]' },
-          { type: 'write', text: cleanCedula },
-          { type: 'click', selector: 'button[type="submit"], input[type="submit"], .btn-primary, #btnBuscar' },
-          { type: 'wait', milliseconds: 3000 },
-          { type: 'screenshot' },
-        ],
+        query: searchQuery,
+        limit: 5,
+        lang: 'es',
+        country: 'mx',
+        scrapeOptions: {
+          formats: ['markdown'],
+        },
       }),
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('Firecrawl API error:', JSON.stringify(data));
+      console.error('Firecrawl search error:', JSON.stringify(data));
 
-      // Fallback: return a manual verification link
+      // Fallback: try simpler scrape of the SEP main page
+      return await fallbackVerification(apiKey, cleanCedula, corsHeaders);
+    }
+
+    console.log('Search completed, results:', data?.data?.length || 0);
+
+    // Analyze search results
+    const results = data?.data || [];
+    let found = false;
+    let holderName = '';
+    let profession = '';
+    let institution = '';
+
+    for (const result of results) {
+      const content = (result.markdown || result.description || '').toLowerCase();
+      if (content.includes(cleanCedula)) {
+        found = true;
+        // Try to extract info
+        const nameMatch = (result.markdown || '').match(/nombre[:\s]*([^\n|]+)/i);
+        const professionMatch = (result.markdown || '').match(/(?:profesión|carrera|título)[:\s]*([^\n|]+)/i);
+        const institutionMatch = (result.markdown || '').match(/(?:institución|escuela|universidad)[:\s]*([^\n|]+)/i);
+
+        if (nameMatch) holderName = nameMatch[1].trim();
+        if (professionMatch) profession = professionMatch[1].trim();
+        if (institutionMatch) institution = institutionMatch[1].trim();
+        break;
+      }
+    }
+
+    if (found) {
+      const result: Record<string, unknown> = {
+        success: true,
+        verified: true,
+        cedula: cleanCedula,
+        message: 'La cédula profesional fue encontrada en registros de la SEP.',
+        verificationUrl: 'https://cedulaprofesional.sep.gob.mx/',
+      };
+      if (holderName) result.holderName = holderName;
+      if (profession) result.profession = profession;
+      if (institution) result.institution = institution;
+
       return new Response(
-        JSON.stringify({
-          success: true,
-          verified: null,
-          fallback: true,
-          message: 'No se pudo verificar automáticamente. Puedes verificar manualmente.',
-          verificationUrl: 'https://cedulaprofesional.sep.gob.mx/',
-        }),
+        JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Scrape completed');
-
-    // Analyze the scraped content for verification results
-    const markdown = data?.data?.markdown || data?.markdown || '';
-    const html = data?.data?.html || data?.html || '';
-    const screenshot = data?.data?.screenshot || data?.screenshot || null;
-    const content = (markdown + ' ' + html).toLowerCase();
-
-    // Look for indicators of a valid cédula
-    const hasResults = content.includes('nombre') && (content.includes('institución') || content.includes('profesión') || content.includes('carrera'));
-    const noResults = content.includes('no se encontraron') || content.includes('sin resultados') || content.includes('no existe');
-
-    let result: any = {
-      success: true,
-      cedula: cleanCedula,
-      verificationUrl: 'https://cedulaprofesional.sep.gob.mx/',
-    };
-
-    if (noResults) {
-      result.verified = false;
-      result.message = 'No se encontró la cédula profesional en el registro de la SEP.';
-    } else if (hasResults) {
-      result.verified = true;
-      result.message = 'La cédula profesional fue encontrada en el registro de la SEP.';
-
-      // Try to extract professional info from the content
-      const nameMatch = markdown.match(/nombre[:\s]*([^\n|]+)/i);
-      const professionMatch = markdown.match(/(?:profesión|carrera)[:\s]*([^\n|]+)/i);
-      const institutionMatch = markdown.match(/(?:institución|escuela)[:\s]*([^\n|]+)/i);
-
-      if (nameMatch) result.holderName = nameMatch[1].trim();
-      if (professionMatch) result.profession = professionMatch[1].trim();
-      if (institutionMatch) result.institution = institutionMatch[1].trim();
-    } else {
-      // Couldn't determine — provide fallback
-      result.verified = null;
-      result.fallback = true;
-      result.message = 'No se pudo determinar el resultado. Verifica manualmente.';
-    }
-
-    if (screenshot) {
-      result.screenshot = screenshot;
-    }
-
+    // If search didn't find it directly, provide fallback with manual link
     return new Response(
-      JSON.stringify(result),
+      JSON.stringify({
+        success: true,
+        verified: null,
+        fallback: true,
+        cedula: cleanCedula,
+        message: 'No se pudo verificar automáticamente. El sitio de la SEP tiene protección anti-bots. Puedes verificar manualmente.',
+        verificationUrl: `https://cedulaprofesional.sep.gob.mx/cedula/presidencia/indexAvanzada.action`,
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
@@ -143,3 +136,44 @@ Deno.serve(async (req) => {
     );
   }
 });
+
+async function fallbackVerification(apiKey: string, cleanCedula: string, corsHeaders: Record<string, string>) {
+  try {
+    // Try scraping the SEP page directly with increased timeout
+    const sepUrl = `https://cedulaprofesional.sep.gob.mx/cedula/presidencia/indexAvanzada.action`;
+
+    const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        url: sepUrl,
+        formats: ['markdown'],
+        onlyMainContent: true,
+        waitFor: 10000,
+        timeout: 60000,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Fallback scrape also failed');
+    }
+  } catch (e) {
+    console.error('Fallback error:', e);
+  }
+
+  // Always return fallback with manual verification link
+  return new Response(
+    JSON.stringify({
+      success: true,
+      verified: null,
+      fallback: true,
+      cedula: cleanCedula,
+      message: 'El sitio de la SEP no permite verificación automática en este momento. Puedes verificar manualmente haciendo clic en el enlace.',
+      verificationUrl: `https://cedulaprofesional.sep.gob.mx/cedula/presidencia/indexAvanzada.action`,
+    }),
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  );
+}
