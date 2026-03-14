@@ -94,12 +94,6 @@ const OnboardingWizard = () => {
     checkAuth();
   }, [navigate]);
 
-  // If user un-selects a professional type while on the credentials step, go back
-  useEffect(() => {
-    if (!isProfessional && step >= totalSteps) {
-      setStep(totalSteps - 1);
-    }
-  }, [isProfessional, step, totalSteps]);
 
   const update = (field: keyof FormData, value: any) => setData((p) => ({ ...p, [field]: value }));
 
