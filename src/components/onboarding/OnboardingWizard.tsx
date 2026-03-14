@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,7 +69,7 @@ const StepIndicator = ({ current, total }: { current: number; total: number }) =
 
 const allSteps = [
   { key: "business", icon: Calendar, title: "Tu Negocio", sub: "Cuéntanos sobre tu actividad" },
-  { key: "credentials", icon: ShieldCheck, title: "Datos Profesionales", sub: "Cédula profesional y datos fiscales" },
+  { key: "credentials", icon: ShieldCheck, title: "Datos Profesionales", sub: "Cédula profesional y datos fiscales (opcional)" },
   { key: "schedule", icon: Clock, title: "Agenda y Horarios", sub: "Configura tu disponibilidad" },
   { key: "payments", icon: CreditCard, title: "Pagos", sub: "Elige cómo cobrar" },
 ];
@@ -80,13 +80,7 @@ const OnboardingWizard = () => {
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
 
-  const isProfessional = professionalServiceTypes.includes(data.serviceType);
-
-  const steps = useMemo(
-    () => (isProfessional ? allSteps : allSteps.filter((s) => s.key !== "credentials")),
-    [isProfessional]
-  );
-
+  const steps = allSteps;
   const totalSteps = steps.length;
 
   useEffect(() => {
@@ -100,12 +94,6 @@ const OnboardingWizard = () => {
     checkAuth();
   }, [navigate]);
 
-  // If user un-selects a professional type while on the credentials step, go back
-  useEffect(() => {
-    if (!isProfessional && step >= totalSteps) {
-      setStep(totalSteps - 1);
-    }
-  }, [isProfessional, step, totalSteps]);
 
   const update = (field: keyof FormData, value: any) => setData((p) => ({ ...p, [field]: value }));
 
@@ -121,12 +109,7 @@ const OnboardingWizard = () => {
 
   const currentStepKey = steps[step]?.key;
 
-  const canAdvance = () => {
-    if (currentStepKey === "credentials") {
-      return data.cedulaProfesional.trim().length > 0;
-    }
-    return true;
-  };
+  const canAdvance = () => true;
 
   const finish = async () => {
     setSaving(true);
@@ -177,10 +160,8 @@ const OnboardingWizard = () => {
         slug,
       };
 
-      if (isProfessional) {
-        updatePayload.cedula_profesional = data.cedulaProfesional.trim() || null;
-        updatePayload.rfc = data.rfc.trim() || null;
-      }
+      updatePayload.cedula_profesional = data.cedulaProfesional.trim() || null;
+      updatePayload.rfc = data.rfc.trim() || null;
 
       const { error: profileError } = await supabase
         .from("profiles")
@@ -272,7 +253,7 @@ const OnboardingWizard = () => {
               {currentStepKey === "credentials" && (
                 <div className="space-y-5">
                   <div>
-                    <Label>Cédula Profesional <span className="text-destructive">*</span></Label>
+                    <Label>Cédula Profesional <span className="text-xs text-muted-foreground">(opcional)</span></Label>
                     <Input
                       placeholder="Ej: 12345678"
                       value={data.cedulaProfesional}
