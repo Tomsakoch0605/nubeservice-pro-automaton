@@ -109,12 +109,7 @@ const OnboardingWizard = () => {
 
   const currentStepKey = steps[step]?.key;
 
-  const canAdvance = () => {
-    if (currentStepKey === "credentials") {
-      return data.cedulaProfesional.trim().length > 0;
-    }
-    return true;
-  };
+  const canAdvance = () => true;
 
   const finish = async () => {
     setSaving(true);
