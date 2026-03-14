@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Settings, Save, Loader2, Copy, ShieldCheck, AlertTriangle, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import CedulaVerification from "@/components/shared/CedulaVerification";
 
 const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
@@ -229,6 +230,11 @@ const SettingsSection = ({ profileId }: Props) => {
                 placeholder="Ej: 12345678"
                 maxLength={20}
               />
+              {data.cedulaProfesional.trim() && (
+                <div className="mt-2">
+                  <CedulaVerification cedula={data.cedulaProfesional} />
+                </div>
+              )}
             </div>
             <div>
               <Label>RFC <span className="text-xs text-muted-foreground">(opcional)</span></Label>

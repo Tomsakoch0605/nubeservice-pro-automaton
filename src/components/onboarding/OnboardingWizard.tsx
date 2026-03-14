@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, ArrowRight, Check, Calendar, Clock, CreditCard, Loader2, ShieldCheck, AlertTriangle, Sparkles } from "lucide-react";
+import CedulaVerification from "@/components/shared/CedulaVerification";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -338,6 +339,11 @@ const OnboardingWizard = () => {
                     <p className="text-xs text-muted-foreground mt-1">
                       Si la agregas, será visible en tu perfil público para dar confianza a tus clientes.
                     </p>
+                    {data.cedulaProfesional.trim() && (
+                      <div className="mt-2">
+                        <CedulaVerification cedula={data.cedulaProfesional} />
+                      </div>
+                    )}
                   </div>
 
                   <div className="border-t border-border pt-5">
