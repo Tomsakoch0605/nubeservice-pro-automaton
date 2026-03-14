@@ -29,6 +29,7 @@ const SettingsSection = ({ profileId }: Props) => {
   const [data, setData] = useState<SettingsData>({
     businessName: "", slug: "", ownerName: "", phone: "", location: "",
     workDays: [], startTime: "09:00", endTime: "18:00",
+    cedulaProfesional: "", rfc: "",
   });
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(false);
