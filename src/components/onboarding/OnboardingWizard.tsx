@@ -130,9 +130,24 @@ const OnboardingWizard = () => {
 
   const currentStepKey = steps[step]?.key;
 
+  const validateRFC = (rfc: string): boolean => {
+    if (!rfc.trim()) return true; // Opcional
+    const cleaned = rfc.trim().toUpperCase();
+    
+    // Persona moral: 12 caracteres (3 letras + 6 dígitos + 3 alfanuméricos)
+    const moralPattern = /^[A-Z&Ñ]{3}\d{6}[A-Z0-9]{3}$/;
+    // Persona física: 13 caracteres (4 letras + 6 dígitos + 3 alfanuméricos)
+    const fisicaPattern = /^[A-Z&Ñ]{4}\d{6}[A-Z0-9]{3}$/;
+    
+    return moralPattern.test(cleaned) || fisicaPattern.test(cleaned);
+  };
+
   const canAdvance = () => {
     if (currentStepKey === "welcome") {
       return data.serviceType !== "" && (data.serviceType !== "Otro" || data.customService.trim() !== "");
+    }
+    if (currentStepKey === "credentials") {
+      return validateRFC(data.rfc);
     }
     return true;
   };
@@ -362,10 +377,18 @@ const OnboardingWizard = () => {
                         </p>
                       </div>
                     )}
-                    {data.rfc.trim() && (
+                    {data.rfc.trim() && validateRFC(data.rfc) && (
                       <p className="text-xs text-primary mt-1 flex items-center gap-1">
-                        <Check className="w-3 h-3" /> ¡Listo! Podrás emitir facturas a tus clientes.
+                        <Check className="w-3 h-3" /> ¡Listo! RFC válido - Podrás emitir facturas.
                       </p>
+                    )}
+                    {data.rfc.trim() && !validateRFC(data.rfc) && (
+                      <div className="flex items-start gap-2 mt-3 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                        <AlertTriangle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+                        <p className="text-xs text-destructive">
+                          El RFC debe tener 12 caracteres (persona moral) o 13 caracteres (persona física). Ej: XAXX010101000
+                        </p>
+                      </div>
                     )}
                   </div>
                 </div>
