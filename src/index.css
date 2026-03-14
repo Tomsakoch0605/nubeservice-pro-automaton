@@ -46,10 +46,10 @@
     --sidebar-ring: 187 74% 51%;
 
     /* Custom tokens */
-    --gradient-hero: linear-gradient(135deg, hsl(28 85% 56%), hsl(35 90% 62%));
+    --gradient-hero: linear-gradient(135deg, hsl(187 74% 51%), hsl(190 80% 58%));
     --gradient-accent: linear-gradient(135deg, hsl(220 60% 20%), hsl(220 50% 30%));
-    --gradient-warm: linear-gradient(180deg, hsl(40 33% 98%), hsl(35 30% 94%));
-    --shadow-soft: 0 4px 24px -4px hsl(28 85% 56% / 0.15);
+    --gradient-warm: linear-gradient(180deg, hsl(40 33% 98%), hsl(195 20% 95%));
+    --shadow-soft: 0 4px 24px -4px hsl(187 74% 51% / 0.15);
     --shadow-card: 0 1px 3px hsl(220 30% 12% / 0.06), 0 8px 24px hsl(220 30% 12% / 0.04);
     --shadow-elevated: 0 12px 40px -8px hsl(220 30% 12% / 0.12);
 
