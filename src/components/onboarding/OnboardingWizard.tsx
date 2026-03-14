@@ -160,10 +160,8 @@ const OnboardingWizard = () => {
         slug,
       };
 
-      if (isProfessional) {
-        updatePayload.cedula_profesional = data.cedulaProfesional.trim() || null;
-        updatePayload.rfc = data.rfc.trim() || null;
-      }
+      updatePayload.cedula_profesional = data.cedulaProfesional.trim() || null;
+      updatePayload.rfc = data.rfc.trim() || null;
 
       const { error: profileError } = await supabase
         .from("profiles")
