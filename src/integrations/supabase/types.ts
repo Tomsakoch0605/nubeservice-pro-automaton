@@ -243,6 +243,7 @@ export type Database = {
       profiles: {
         Row: {
           business_name: string
+          cedula_profesional: string | null
           created_at: string
           deposit_percent: number | null
           end_time: string | null
@@ -253,6 +254,7 @@ export type Database = {
           payment_methods: string[] | null
           phone: string | null
           requires_deposit: boolean | null
+          rfc: string | null
           service_type: string | null
           slug: string | null
           start_time: string | null
@@ -262,6 +264,7 @@ export type Database = {
         }
         Insert: {
           business_name?: string
+          cedula_profesional?: string | null
           created_at?: string
           deposit_percent?: number | null
           end_time?: string | null
@@ -272,6 +275,7 @@ export type Database = {
           payment_methods?: string[] | null
           phone?: string | null
           requires_deposit?: boolean | null
+          rfc?: string | null
           service_type?: string | null
           slug?: string | null
           start_time?: string | null
@@ -281,6 +285,7 @@ export type Database = {
         }
         Update: {
           business_name?: string
+          cedula_profesional?: string | null
           created_at?: string
           deposit_percent?: number | null
           end_time?: string | null
@@ -291,6 +296,7 @@ export type Database = {
           payment_methods?: string[] | null
           phone?: string | null
           requires_deposit?: boolean | null
+          rfc?: string | null
           service_type?: string | null
           slug?: string | null
           start_time?: string | null
