@@ -99,6 +99,8 @@ const Dashboard = () => {
       clientPhone: a.clients?.phone || null,
       serviceName: a.services?.name || "Sin servicio",
       time: new Date(a.starts_at).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" }),
+      startsAt: a.starts_at,
+      endsAt: a.ends_at,
       status: a.status,
       notes: a.notes,
     })));
