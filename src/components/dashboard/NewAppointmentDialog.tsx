@@ -121,6 +121,15 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
       return;
     }
 
+    // Auto-sync to Google Calendar (fire-and-forget)
+    const client = clients.find(c => c.id === clientId);
+    pushToGoogleCalendar({
+      summary: `${client?.full_name || "Cliente"} — ${service.name}`,
+      description: notes.trim() || undefined,
+      starts_at: startsAt.toISOString(),
+      ends_at: endsAt.toISOString(),
+    });
+
     toast.success("Cita creada exitosamente");
     setSaving(false);
     onOpenChange(false);
