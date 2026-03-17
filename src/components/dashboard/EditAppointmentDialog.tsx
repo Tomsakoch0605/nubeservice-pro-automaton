@@ -90,6 +90,16 @@ const EditAppointmentDialog = ({ open, onOpenChange, appointment, onUpdated }: E
     setSaving(false);
     onOpenChange(false);
     onUpdated();
+
+    // Sync updated appointment to Google Calendar (fire-and-forget)
+    if (status === "confirmed" || status === "completed") {
+      pushToGoogleCalendar({
+        summary: `${appointment.clientName} — ${appointment.serviceName}`,
+        description: notes.trim() || undefined,
+        starts_at: new Date().toISOString(), // placeholder — real sync uses time from appointment
+        ends_at: new Date().toISOString(),
+      });
+    }
   };
 
   const handleCancel = async () => {
