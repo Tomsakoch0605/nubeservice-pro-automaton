@@ -36,6 +36,8 @@ export type AppointmentDetail = {
   clientPhone?: string | null;
   serviceName: string;
   time: string;
+  startsAt?: string;
+  endsAt?: string;
   status: string;
   notes?: string | null;
 };
