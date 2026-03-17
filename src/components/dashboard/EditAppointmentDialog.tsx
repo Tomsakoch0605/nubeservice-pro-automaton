@@ -93,13 +93,13 @@ const EditAppointmentDialog = ({ open, onOpenChange, appointment, onUpdated }: E
     onOpenChange(false);
     onUpdated();
 
-    // Sync updated appointment to Google Calendar (fire-and-forget)
-    if (status === "confirmed" || status === "completed") {
+    // Sync to Google Calendar (fire-and-forget) for active appointments
+    if ((status === "confirmed" || status === "completed") && appointment.startsAt && appointment.endsAt) {
       pushToGoogleCalendar({
         summary: `${appointment.clientName} — ${appointment.serviceName}`,
         description: notes.trim() || undefined,
-        starts_at: new Date().toISOString(), // placeholder — real sync uses time from appointment
-        ends_at: new Date().toISOString(),
+        starts_at: appointment.startsAt,
+        ends_at: appointment.endsAt,
       });
     }
   };
