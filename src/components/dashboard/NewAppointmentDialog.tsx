@@ -5,6 +5,7 @@ import { CalendarIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { pushToGoogleCalendar } from "@/lib/google-calendar-sync";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -119,6 +120,15 @@ const NewAppointmentDialog = ({ open, onOpenChange, profileId, onCreated }: NewA
       setSaving(false);
       return;
     }
+
+    // Auto-sync to Google Calendar (fire-and-forget)
+    const client = clients.find(c => c.id === clientId);
+    pushToGoogleCalendar({
+      summary: `${client?.full_name || "Cliente"} — ${service.name}`,
+      description: notes.trim() || undefined,
+      starts_at: startsAt.toISOString(),
+      ends_at: endsAt.toISOString(),
+    });
 
     toast.success("Cita creada exitosamente");
     setSaving(false);

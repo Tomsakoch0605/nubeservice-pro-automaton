@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Loader2, XCircle, CheckCircle, AlertTriangle, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { pushToGoogleCalendar } from "@/lib/google-calendar-sync";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -35,6 +36,8 @@ export type AppointmentDetail = {
   clientPhone?: string | null;
   serviceName: string;
   time: string;
+  startsAt?: string;
+  endsAt?: string;
   status: string;
   notes?: string | null;
 };
@@ -89,6 +92,16 @@ const EditAppointmentDialog = ({ open, onOpenChange, appointment, onUpdated }: E
     setSaving(false);
     onOpenChange(false);
     onUpdated();
+
+    // Sync to Google Calendar (fire-and-forget) for active appointments
+    if ((status === "confirmed" || status === "completed") && appointment.startsAt && appointment.endsAt) {
+      pushToGoogleCalendar({
+        summary: `${appointment.clientName} — ${appointment.serviceName}`,
+        description: notes.trim() || undefined,
+        starts_at: appointment.startsAt,
+        ends_at: appointment.endsAt,
+      });
+    }
   };
 
   const handleCancel = async () => {
